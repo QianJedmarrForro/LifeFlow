@@ -5,9 +5,12 @@
             
             <form action="/register" method="POST" class="space-y-4">
                 @csrf
-                <input type="text" placeholder="Full Name" class="w-full p-3 rounded border">
-                <input type="email" placeholder="Email" class="w-full p-3 rounded border">
-                <input type="password" placeholder="Password" class="w-full p-3 rounded border">
+                
+                <input type="text" name="name" placeholder="Full Name" class="w-full p-3 rounded border" required>
+                
+                <input type="email" name="email" placeholder="Email" class="w-full p-3 rounded border" required>
+                
+                <input type="password" name="password" placeholder="Password" class="w-full p-3 rounded border" required>
                 
                 <button type="submit" class="w-full bg-red-600 text-white py-3 rounded font-bold hover:bg-red-700">
                     CREATE ACCOUNT

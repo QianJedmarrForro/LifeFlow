@@ -1,18 +1,70 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BloodRequestController;
 
-// 1. The Landing Page
+// Landing Page
 Route::get('/', function () {
     return view('welcome');
 });
 
-// 2. The Login Page
+// Login
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
 
-// 3. The Sign Up Page
+// Register
 Route::get('/register', function () {
     return view('register');
 });
+
+// Process Login
+Route::post('/login', function () {
+    return redirect('/home');
+});
+
+// Process Registration
+Route::post('/register', function () {
+    return redirect('/login');
+});
+
+// Home
+Route::get('/home', function () {
+    return view('home');
+});
+
+// Donate Blood Page
+Route::get('/donate', function () {
+    return view('donate');
+});
+
+// Process Donation Form
+Route::post('/donate', function () {
+    return redirect('/donate')->with('success', 'Your donation request has been submitted!');
+})->name('donate.submit');
+
+// Blood Request Page
+Route::get('/request', [BloodRequestController::class, 'index'])->name('request.index');
+
+// Process Blood Request Form
+Route::post('/request', [BloodRequestController::class, 'store'])->name('request.store');
+
+// Donor Records
+Route::get('/donor-records', function () {
+    return view('donor-records');
+})->name('donor.records');
+
+// About Us
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+// Contact Us
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+// Logout
+Route::post('/logout', function () {
+    return redirect('/login');
+})->name('logout');

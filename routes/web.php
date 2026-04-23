@@ -16,7 +16,7 @@ Route::get('/login', function () {
 // Register
 Route::get('/register', function () {
     return view('register');
-});
+})->name('register');
 
 // Process Login
 Route::post('/login', function () {

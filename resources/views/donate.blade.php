@@ -1,329 +1,215 @@
 <x-layout>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
-    .lf-wrap {
+    .page-main-container {
         font-family: 'DM Sans', sans-serif;
-        background: #fff5f5;
-        border-radius: 24px;
-        overflow: hidden;
-        max-width: 680px;
-        margin: 2rem auto;
-        border: 0.5px solid #f0c0c0;
-        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-    }
-
-    .lf-header {
-        background: linear-gradient(135deg, #c0392b 0%, #e74c3c 60%, #ff6b6b 100%);
-        padding: 2.5rem 2rem 2.5rem;
-        text-align: center;
-        position: relative;
-    }
-
-    .lf-header::after {
-        content: '';
-        position: absolute;
-        bottom: -1px; left: 0; right: 0;
-        height: 32px;
-        background: #fff5f5;
-        clip-path: ellipse(55% 100% at 50% 100%);
-    }
-
-    .lf-badge {
-        display: inline-block;
-        font-size: 11px;
-        background: rgba(255,255,255,0.2);
-        color: #fff;
-        padding: 4px 14px;
-        border-radius: 20px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-    }
-
-    .lf-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 32px;
-        color: #fff;
-        margin: 0;
-        letter-spacing: -0.5px;
-    }
-
-    .lf-sub {
-        color: rgba(255,255,255,0.8);
-        font-size: 14px;
-        margin-top: 6px;
-    }
-
-    .lf-body {
-        padding: 1rem 2rem 2.5rem;
-        background: #fff5f5;
-    }
-
-    .lf-section-label {
-        font-size: 11px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: #c0392b;
-        font-weight: 600;
-        margin: 1.5rem 0 0.75rem;
-        border-bottom: 1px solid #f5c6c6;
-        padding-bottom: 4px;
-    }
-
-    .lf-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    .lf-field {
+        padding: 40px;
+        background-color: #f8fafc;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        align-items: center;
     }
 
-    .lf-field.full {
-        grid-column: 1 / -1;
-    }
-
-    .lf-label {
-        font-size: 12px;
-        font-weight: 500;
-        color: #7a3030;
-        letter-spacing: 0.3px;
-    }
-
-    .lf-input, .lf-select {
-        background: #fff;
-        border: 1px solid #f0c0c0;
-        border-radius: 10px;
-        height: 42px;
-        padding: 0 14px;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 14px;
-        color: #333;
-        outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
+    .lf-page-header {
         width: 100%;
+        max-width: 800px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .lf-page-title {
+        font-family: 'Serif', 'Georgia', serif;
+        font-size: 36px;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    .lf-card {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        width: 100%;
+        max-width: 800px;
         box-sizing: border-box;
     }
 
-    .lf-input:focus, .lf-select:focus {
-        border-color: #e74c3c;
-        box-shadow: 0 0 0 3px rgba(231,76,60,0.12);
-    }
-
-    .lf-select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c0392b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 14px center;
-        padding-right: 36px;
-    }
-
-    .blood-type-grid {
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        gap: 6px;
-    }
-
-    .blood-btn {
-        height: 40px;
-        border: 1.5px solid #f0c0c0;
-        border-radius: 8px;
-        background: #fff;
-        font-family: 'DM Sans', sans-serif;
+    .form-label {
+        display: block;
+        font-weight: 700;
+        color: #1e40af;
+        margin-bottom: 8px;
         font-size: 13px;
-        font-weight: 600;
-        color: #7a3030;
-        cursor: pointer;
-        transition: all 0.15s;
+        text-transform: uppercase;
     }
 
-    .blood-btn:hover {
-        border-color: #e74c3c;
-        color: #e74c3c;
-    }
-
-    .blood-btn.selected {
-        background: #e74c3c;
-        border-color: #e74c3c;
-        color: #fff;
-        box-shadow: 0 4px 10px rgba(231,76,60,0.3);
-    }
-
-    .lf-agree {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: #fff;
-        border: 1px solid #f0c0c0;
-        border-radius: 12px;
-        padding: 14px 16px;
-        margin-top: 1.5rem;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .lf-agree:hover { background: #fffcfc; }
-
-    .lf-agree-text {
-        font-size: 13px;
-        color: #555;
-        font-weight: 500;
-    }
-
-    .lf-submit {
+    .form-input {
         width: 100%;
-        height: 54px;
-        margin-top: 1.5rem;
-        background: linear-gradient(135deg, #c0392b, #e74c3c);
-        color: #fff;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 14px;
+        font-family: inherit;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        background-color: #ef4444;
+        color: white;
         border: none;
-        border-radius: 14px;
-        font-family: 'Playfair Display', serif;
-        font-size: 18px;
-        letter-spacing: 0.5px;
+        border-radius: 10px;
+        padding: 16px;
+        font-weight: 700;
+        font-size: 16px;
         cursor: pointer;
-        transition: transform 0.1s, opacity 0.2s;
-        box-shadow: 0 6px 15px rgba(192, 57, 43, 0.3);
+        transition: 0.3s;
+        margin-top: 10px;
     }
 
-    .lf-submit:hover { opacity: 0.95; }
-    .lf-submit:active { transform: scale(0.98); }
+    .btn-submit:hover {
+        background-color: #dc2626;
+        transform: translateY(-1px);
+    }
 
-    .lf-footer {
-        background: #c0392b;
-        padding: 15px;
+    .blood-option {
+        border: 1px solid #e2e8f0;
+        padding: 12px;
         text-align: center;
-        font-size: 12px;
-        color: rgba(255,255,255,0.9);
-        letter-spacing: 0.5px;
+        border-radius: 8px;
+        font-weight: 700;
+        color: #ef4444;
+        background: #fff;
+        transition: all 0.2s ease;
+        cursor: pointer;
     }
 
-    @media (max-width: 540px) {
-        .lf-row { grid-template-columns: 1fr; }
-        .blood-type-grid { grid-template-columns: repeat(4, 1fr); }
+    .blood-option:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        border-color: #ef4444;
+    }
+
+    .blood-option.selected {
+        background: #ef4444;
+        color: white;
+        border-color: #ef4444;
+        transform: scale(1.05);
     }
 </style>
 
-<div class="lf-wrap">
+<div class="page-main-container">
 
-    {{-- Header --}}
-    <div class="lf-header">
-        <div class="lf-badge">LifeFlow</div>
-        <h1 class="lf-title">Donor Information</h1>
-        <p class="lf-sub">Every donation saves up to 3 lives</p>
+    <div class="lf-page-header">
+        <h1 class="lf-page-title">Donor Information</h1>
+        <div style="font-weight: 600; color: #64748b;">
+            April 24, 2026 🔔
+        </div>
     </div>
 
-    {{-- Body --}}
-    <div class="lf-body">
+    <div class="lf-card">
 
-        @if (session('success'))
-            <div style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 10px; padding: 12px 16px; margin-bottom: 1rem; font-size: 14px;">
-                ✓ {{ session('success') }}
-            </div>
-        @endif
+        <h2 style="margin-bottom: 25px;">Registration Form</h2>
 
-        <form action="{{ route('donate.submit') }}" method="POST">
+        <form action="{{ route('donations.store') }}" method="POST">
             @csrf
 
-            <div class="lf-section-label">Personal details</div>
-            <div class="lf-row">
-                <div class="lf-field full">
-                    <label class="lf-label" for="name">Full name</label>
-                    <input class="lf-input" type="text" id="name" name="name"
-                        placeholder="e.g. Maria Santos"
-                        value="{{ old('name') }}" required>
+            <!-- FULL NAME -->
+            <div style="margin-bottom: 20px;">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-input"
+                    placeholder="Enter full name" required>
+            </div>
+
+            <!-- DOB + ADDRESS -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                <div>
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" name="dob" class="form-input" required>
                 </div>
 
-                <div class="lf-field">
-                    <label class="lf-label" for="dob">Date of birth</label>
-                    <input class="lf-input" type="date" id="dob" name="dob"
-                        value="{{ old('dob') }}" required>
-                </div>
-
-                <div class="lf-field">
-                    <label class="lf-label" for="address">Address</label>
-                    <input class="lf-input" type="text" id="address" name="address"
-                        placeholder="City, Province"
-                        value="{{ old('address') }}">
+                <div>
+                    <label class="form-label">Address</label>
+                    <input type="text" name="address" class="form-input"
+                        placeholder="Enter complete address">
                 </div>
             </div>
 
-            <div class="lf-section-label">Contact</div>
-            <div class="lf-row">
-                <div class="lf-field">
-                    <label class="lf-label" for="email_type">Email type</label>
-                    <select class="lf-select" id="email_type" name="email_type">
-                        <option value="">Select...</option>
-                        <option value="personal" {{ old('email_type') == 'personal' ? 'selected' : '' }}>Personal</option>
-                        <option value="work" {{ old('email_type') == 'work' ? 'selected' : '' }}>Work</option>
-                    </select>
+            <!-- EMAIL + PHONE -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                <div>
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input"
+                        placeholder="Enter email address" required>
                 </div>
 
-                <div class="lf-field">
-                    <label class="lf-label" for="email">Email address</label>
-                    <input class="lf-input" type="email" id="email" name="email"
-                        placeholder="you@email.com"
-                        value="{{ old('email') }}" required>
-                </div>
-
-                <div class="lf-field">
-                    <label class="lf-label" for="phone_type">Phone type</label>
-                    <select class="lf-select" id="phone_type" name="phone_type">
-                        <option value="">Select...</option>
-                        <option value="mobile" {{ old('phone_type') == 'mobile' ? 'selected' : '' }}>Mobile</option>
-                        <option value="landline" {{ old('phone_type') == 'landline' ? 'selected' : '' }}>Landline</option>
-                    </select>
-                </div>
-
-                <div class="lf-field">
-                    <label class="lf-label" for="phone">Phone number</label>
-                    <input class="lf-input" type="tel" id="phone" name="phone"
-                        placeholder="+63 9XX XXX XXXX"
-                        value="{{ old('phone') }}">
+                <div>
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" name="phone" class="form-input"
+                        placeholder="Enter phone number (e.g. 09XXXXXXXXX)">
                 </div>
             </div>
 
-            <div class="lf-section-label">Blood type</div>
-            <div class="blood-type-grid">
-                @foreach (['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $type)
-                    <button type="button" class="blood-btn {{ old('blood_type') == $type ? 'selected' : '' }}"
-                        data-val="{{ $type }}">{{ $type }}</button>
-                @endforeach
+            <!-- BLOOD TYPE -->
+            <div style="margin-bottom:25px;">
+                <label class="form-label">Select Blood Type</label>
+
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+                    @foreach(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $type)
+
+                        <label>
+                            <input type="radio" name="blood_type" value="{{ $type }}" required
+                                style="display:none;"
+                                id="type_{{ $type }}"
+                                onchange="updateBloodSelection()">
+
+                            <div class="blood-option"
+                                id="label_{{ $type }}"
+                                onclick="document.getElementById('type_{{ $type }}').checked = true; updateBloodSelection();">
+                                {{ $type }}
+                            </div>
+                        </label>
+
+                    @endforeach
+                </div>
             </div>
-            <input type="hidden" id="blood_type" name="blood_type" value="{{ old('blood_type') }}">
 
-            <label class="lf-agree">
-                <input type="checkbox" name="eligible" id="eligible" required
-                    style="width:18px;height:18px;accent-color:#e74c3c;flex-shrink:0;">
-                <span class="lf-agree-text">I confirm that I am healthy and eligible to donate blood</span>
-            </label>
+            <!-- ELIGIBILITY -->
+            <div style="margin-bottom:30px; background:#f8fafc; padding:15px; border-radius:10px; border:1px solid #e2e8f0;">
+                <label style="display:flex; align-items:center; gap:12px; font-size:14px;">
+                    <input type="checkbox" name="eligible" value="1" required>
+                    I confirm eligibility
+                </label>
+            </div>
 
-            <button type="submit" class="lf-submit">
+            <button type="submit" class="btn-submit">
                 Submit Donation Request
             </button>
 
         </form>
     </div>
-
-    <div class="lf-footer">© 2026 LifeFlow. All Rights Reserved.</div>
-
 </div>
 
 <script>
-    document.querySelectorAll('.blood-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.blood-btn').forEach(function(b) {
-                b.classList.remove('selected');
-            });
-            btn.classList.add('selected');
-            document.getElementById('blood_type').value = btn.dataset.val;
-        });
+function updateBloodSelection() {
+    const types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+    types.forEach(type => {
+        let radio = document.getElementById('type_' + type);
+        let label = document.getElementById('label_' + type);
+
+        if (radio.checked) {
+            label.classList.add('selected');
+        } else {
+            label.classList.remove('selected');
+        }
     });
+}
 </script>
 
 </x-layout>

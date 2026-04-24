@@ -1,117 +1,234 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'LifeFlow' }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ $title ?? 'LifeFlow' }} — Blood Bank System</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        :root {
+            --red: #C0392B;
+            --red-hover: #E74C3C;
+            --sidebar-w: 280px;
+            --header-h: 72px;
+            --bg: #F5F4F2;
+            --surface: #0A0A0A;
+            --surface-light: #1A1A1A;
+            --border: rgba(192, 57, 43, 0.4);
+            --text-on-dark: #FFFFFF;
+            --muted: #A0A0A0;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            color: #333;
+            background: var(--bg);
+        }
+
+        .lf-shell {
+            display: grid;
+            grid-template-columns: var(--sidebar-w) 1fr;
+            grid-template-rows: var(--header-h) 1fr;
+            grid-template-areas:
+                "header header"
+                "sidebar main";
+            min-height: 100vh;
+        }
+
+        .lf-header {
+            grid-area: header;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .lf-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .lf-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--red);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lf-logo-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .lf-logo-name span { color: var(--red); }
+
+        .lf-header-center {
+            font-size: 22px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .lf-sidebar {
+            grid-area: sidebar;
+            position: sticky;
+            top: var(--header-h);
+            height: calc(100vh - var(--header-h));
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+        }
+
+        .lf-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 32px;
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .lf-nav-item:hover {
+            background: var(--surface-light);
+            color: #fff;
+        }
+
+        .lf-nav-item.active {
+            color: #fff;
+            background: rgba(192, 57, 43, 0.15);
+            border-left: 5px solid var(--red);
+        }
+
+        .lf-main {
+            grid-area: main;
+            background: var(--bg);
+        }
+
+        .lf-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #F5C4B3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-[#1a1a2e] antialiased text-white">
 
-    {{-- Guest Layout (Login/Register) --}}
-    @if(request()->is('login') || request()->is('register') || request()->is('/'))
-        <nav class="flex justify-between items-center p-6 bg-white shadow-sm">
-            <a href="/" class="font-black text-2xl uppercase tracking-tighter text-red-600">LIFEFLOW</a>
-            <div class="space-x-8 font-semibold text-gray-800">
-                <a href="/login" class="hover:text-red-600 transition">Login</a>
-                <a href="/register" class="hover:text-red-600 transition">Register</a>
+<body>
+<div class="lf-shell">
+
+    <header class="lf-header">
+
+        <a href="{{ route('dashboard') }}" class="lf-logo">
+            <div class="lf-logo-icon"></div>
+            <span class="lf-logo-name">Life<span>Flow</span></span>
+        </a>
+
+        <span class="lf-header-center">Blood Bank Management System</span>
+
+        @auth
+        <div x-data="{ open: false }" style="position:relative;">
+            <div class="lf-avatar" @click="open = !open">
+                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
             </div>
-        </nav>
-        <main class="container mx-auto px-4 mt-10 text-gray-800">
-            {{ $slot }} 
-        </main>
 
-    {{-- Authenticated Layout (Sidebar + Content) --}}
-    @else
-        <div class="flex min-h-screen">
-            
-            <aside class="w-64 bg-[#111111] flex flex-col fixed h-full shadow-2xl z-50 p-4 border-r border-gray-900">
-                
-                <div class="py-8 flex flex-col items-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-16 mb-2">
-                    <h1 class="font-bold text-white tracking-tight text-center text-sm leading-tight uppercase">
-                        LifeFlow<br>Logo
-                    </h1>
-                </div>
+            <div x-show="open"
+                 @click.outside="open = false"
+                 x-cloak
+                 style="position:absolute; right:0; top:55px; background:#0A0A0A; border:1px solid var(--border); border-radius:12px; min-width:220px;">
 
-                <div class="px-2 mb-6">
-                    <div class="flex items-center bg-[#2a2a2a] rounded-full px-4 py-2">
-                        <input type="text" placeholder="Search..." class="bg-transparent border-none outline-none text-xs text-gray-400 w-full placeholder-gray-500">
-                        <span class="text-blue-400 text-sm">🔍</span>
+                <div style="padding:12px;">
+                    <div style="color:#fff; font-weight:700;">
+                        {{ auth()->user()->name }}
+                    </div>
+                    <div style="color:#777; font-size:12px;">
+                        {{ auth()->user()->email }}
                     </div>
                 </div>
 
-                <nav class="flex-1 px-2 space-y-3 overflow-y-auto custom-scrollbar">
-                    @php
-                        $navItems = [
-                            ['url' => '/home', 'label' => 'Home'],
-                            ['url' => '/donate', 'label' => 'Donate Blood'],
-                            ['url' => '/request', 'label' => 'Request Blood'],
-                            ['url' => '/records', 'label' => 'Donor Records'],
-                            ['url' => '/about', 'label' => 'About Us'],
-                            ['url' => '/contact', 'label' => 'Contact Us'],
-                        ];
-                    @endphp
+                <a href="{{ route('profile') }}"
+                   style="display:block;padding:10px 16px;color:#eee;text-decoration:none;">
+                    Profile
+                </a>
 
-                    @foreach($navItems as $item)
-                        <a href="{{ $item['url'] }}" 
-                           class="flex items-center justify-center py-3 px-6 rounded-full transition-all duration-200 text-sm
-                           {{ request()->is(ltrim($item['url'], '/').'*') 
-                              ? 'bg-[#e53935] text-white font-bold shadow-lg' 
-                              : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]' }}">
-                            {{ $item['label'] }}
-                        </a>
-                    @endforeach
-                </nav>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button style="width:100%;text-align:left;padding:10px 16px;color:#E74C3C;background:none;border:none;">
+                        Logout
+                    </button>
+                </form>
 
-                <div class="p-4 mt-auto flex justify-center">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="bg-[#2a2a2a] hover:bg-gray-700 text-gray-300 px-6 py-2 rounded-full text-xs font-bold uppercase transition">
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            </aside>
-
-            <main class="flex-1 ml-64 flex flex-col">
-                <header class="flex justify-between items-center p-8">
-                    <h2 class="text-gray-500 font-medium text-xs uppercase tracking-widest">
-                        Dashboard / <span class="text-red-500">{{ ucfirst(request()->path()) }}</span>
-                    </h2>
-                    
-                    <div class="flex items-center space-x-4">
-                        <div class="text-right">
-                            <p class="text-xs text-gray-500 font-semibold">{{ now()->format('F d, Y') }}</p>
-                            <p class="text-sm font-bold text-gray-300">Tagum City Branch</p>
-                        </div>
-                        <div class="w-10 h-10 bg-[#222222] border border-gray-700 rounded-xl flex items-center justify-center text-red-500 font-black">
-                            {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
-                        </div>
-                    </div>
-                </header>
-
-                <div class="px-8 pb-8 flex-1">
-                    <div class="bg-[#f87171] min-h-full rounded-[2.5rem] p-8 text-gray-900 shadow-2xl relative overflow-hidden">
-                        <div class="absolute -top-24 -right-24 w-64 h-64 bg-red-400 rounded-full opacity-20"></div>
-                        <div class="relative z-10">
-                            {{ $slot }}
-                        </div>
-                    </div>
-                </div>
-
-                <footer class="p-4 text-center text-gray-600 text-[10px] tracking-widest uppercase">
-                    &copy; 2026 LIFEFLOW SYSTEM • DEVELOPED FOR LIFE
-                </footer>
-            </main>
+            </div>
         </div>
-    @endif
+        @endauth
 
+    </header>
+
+    <nav class="lf-sidebar">
+
+        <a href="{{ route('dashboard') }}" class="lf-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            Dashboard
+        </a>
+
+        <a href="{{ route('donations.index') }}" class="lf-nav-item {{ request()->routeIs('donations.index') ? 'active' : '' }}">
+            Blood Donations
+        </a>
+
+        <a href="{{ route('blood-requests.index') }}" class="lf-nav-item {{ request()->routeIs('blood-requests.index') ? 'active' : '' }}">
+            Blood Requests
+        </a>
+
+        <a href="{{ route('donors.records') }}" class="lf-nav-item {{ request()->routeIs('donors.records') ? 'active' : '' }}">
+            Donor Records
+        </a>
+
+        @auth
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}"
+                   class="lf-nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    Admin Panel
+                </a>
+            @endif
+        @endauth
+
+    </nav>
+
+    <main class="lf-main">
+        {{ $slot }}
+    </main>
+
+</div>
 </body>
 </html>

@@ -1,70 +1,135 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BloodRequestController;
+use App\Http\Controllers\DonationController;
+use App\Http\Controllers\DashboardController;
+use App\Models\BloodRequest;
 
-// Landing Page
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+/*
+|--------------------------------------------------------------------------
+| Guest Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->group(function () {
+
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+
+    Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.post');
 });
 
-// Login
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+/*
+|--------------------------------------------------------------------------
+| Logout
+|--------------------------------------------------------------------------
+*/
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Register
-Route::get('/register', function () {
-    return view('register');
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/profile', fn () => view('profile'))->name('profile');
+
+    Route::get('/profile/edit', fn () => view('profile-edit'))->name('profile.edit');
+
+    Route::post('/profile/update', function (Request $request) {
+
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'nullable|min:6',
+        ]);
+
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+
+        if (!empty($validated['password'])) {
+            $user->password = bcrypt($validated['password']);
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully');
+
+    })->name('profile.update');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Donations
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/donate', [DonationController::class, 'index'])->name('donations.index');
+    Route::post('/donate', [DonationController::class, 'store'])->name('donations.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Blood Requests
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/blood-requests', [BloodRequestController::class, 'index'])->name('blood-requests.index');
+    Route::post('/blood-requests', [BloodRequestController::class, 'store'])->name('blood-requests.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Donors
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/donors', [DonationController::class, 'showRecords'])->name('donors.records');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/admin/dashboard', function () {
+        abort_if(auth()->user()->role !== 'admin', 403);
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+
+    Route::post('/admin/request/{id}/approve', function ($id) {
+
+        abort_if(auth()->user()->role !== 'admin', 403);
+
+        BloodRequest::where('id', $id)->update([
+            'status' => 'approved'
+        ]);
+
+        return back();
+
+    })->name('admin.request.approve');
+
+    Route::post('/admin/request/{id}/reject', function ($id) {
+
+        abort_if(auth()->user()->role !== 'admin', 403);
+
+        BloodRequest::where('id', $id)->update([
+            'status' => 'rejected'
+        ]);
+
+        return back();
+
+    })->name('admin.request.reject');
+
 });
-
-// Process Login
-Route::post('/login', function () {
-    return redirect('/home');
-});
-
-// Process Registration
-Route::post('/register', function () {
-    return redirect('/login');
-});
-
-// Home
-Route::get('/home', function () {
-    return view('home');
-});
-
-// Donate Blood Page
-Route::get('/donate', function () {
-    return view('donate');
-});
-
-// Process Donation Form
-Route::post('/donate', function () {
-    return redirect('/donate')->with('success', 'Your donation request has been submitted!');
-})->name('donate.submit');
-
-// Blood Request Page
-Route::get('/request', [BloodRequestController::class, 'index'])->name('request.index');
-
-// Process Blood Request Form
-Route::post('/request', [BloodRequestController::class, 'store'])->name('request.store');
-
-// Donor Records
-Route::get('/donor-records', function () {
-    return view('donor-records');
-})->name('donor.records');
-
-// About Us
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-// Contact Us
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-// Logout
-Route::post('/logout', function () {
-    return redirect('/login');
-})->name('logout');

@@ -34,12 +34,19 @@ Route::middleware('guest')->group(function () {
 */
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+<<<<<<< HEAD
 /*
 |--------------------------------------------------------------------------
 | Auth Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
+=======
+// Register
+Route::get('/register', function () {
+    return view('register');
+})->name('register');
+>>>>>>> 58c3432d420dc84ee163b92c146a70f92eb3db40
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

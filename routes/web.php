@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BloodRequestController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController; // Added this
 use App\Models\BloodRequest;
 
 Route::get('/', function () {
@@ -44,30 +45,12 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Profile
+    | Profile (Fixed to use PUT and Controller)
     |--------------------------------------------------------------------------
     */
-    Route::get('/profile', fn () => view('profile'))->name('profile');
-    Route::get('/profile/edit', fn () => view('profile-edit'))->name('profile.edit');
-
-    Route::post('/profile/update', function (Request $request) {
-        $user = auth()->user();
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'nullable|min:6',
-        ]);
-
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-
-        if (!empty($validated['password'])) {
-            $user->password = bcrypt($validated['password']);
-        }
-
-        $user->save();
-        return back()->with('success', 'Profile updated successfully');
-    })->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     /*
     |--------------------------------------------------------------------------
@@ -79,7 +62,7 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Records (Kini ang mugamit sa records.blade.php)
+    | Records
     |--------------------------------------------------------------------------
     */
     Route::get('/records', [BloodRequestController::class, 'index'])->name('records.index');
@@ -89,7 +72,6 @@ Route::middleware('auth')->group(function () {
     | Blood Requests
     |--------------------------------------------------------------------------
     */
-    // Gigamit gihapon ni para sa pag-submit og bag-ong request
     Route::get('/blood-requests', [BloodRequestController::class, 'index'])->name('blood-requests.index');
     Route::post('/blood-requests', [BloodRequestController::class, 'store'])->name('blood-requests.store');
 

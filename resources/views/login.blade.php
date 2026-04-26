@@ -50,6 +50,26 @@
             text-align: center;
         }
 
+        /* --- LOGO FIX SECTION --- */
+        .bb-logo-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: -25px auto 5px auto; /* Pulls logo up and adds slight bottom spacing */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Clips the white space edges of the PNG */
+            position: relative;
+        }
+
+        .bb-logo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scale(1.2); /* Zooms in to hide the empty white space */
+        }
+        /* ------------------------ */
+
         .bb-title {
             font-family: 'Playfair Display', serif;
             font-size: 24px;
@@ -83,11 +103,13 @@
             border-radius: 10px;
             border: 1px solid #f0dcd8;
             font-size: 14px;
+            transition: 0.2s;
         }
 
         .bb-input:focus {
             outline: none;
             border-color: #c44040;
+            box-shadow: 0 0 0 3px rgba(196, 64, 64, 0.1);
         }
 
         .bb-btn {
@@ -99,11 +121,15 @@
             padding: 13px;
             border-radius: 100px;
             font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        .bb-btn:hover { background: #b53636; }
+        .bb-btn:hover { 
+            background: #b53636;
+            transform: translateY(-1px);
+        }
 
         .bb-footer {
             margin-top: 1.2rem;
@@ -114,7 +140,7 @@
         .bb-footer a {
             color: #c44040;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .bb-error {
@@ -131,7 +157,9 @@
 
     <div class="bb-login-container">
 
-        <x-logo size="90" class="mb-2" />
+        <div class="bb-logo-wrapper">
+            <x-logo />
+        </div>
 
         <h1 class="bb-title">Welcome <span>Back</span></h1>
         <p class="bb-sub">Login to continue managing blood donations.</p>
@@ -140,8 +168,8 @@
             @csrf
 
             <div class="bb-input-group">
-                <label>Email</label>
-                <input type="email" name="email" class="bb-input" required value="{{ old('email') }}">
+                <label>Email Address</label>
+                <input type="email" name="email" class="bb-input" required value="{{ old('email') }}" placeholder="Enter your email">
                 @error('email')
                     <div class="bb-error">{{ $message }}</div>
                 @enderror
@@ -149,17 +177,17 @@
 
             <div class="bb-input-group">
                 <label>Password</label>
-                <input type="password" name="password" class="bb-input" required>
+                <input type="password" name="password" class="bb-input" required placeholder="••••••••">
                 @error('password')
                     <div class="bb-error">{{ $message }}</div>
                 @enderror
             </div>
 
-            <button type="submit" class="bb-btn">Login</button>
+            <button type="submit" class="bb-btn">Login to Account</button>
 
             <div class="bb-footer">
                 Don’t have an account?
-                <a href="{{ route('register') }}">Register</a>
+                <a href="{{ route('register') }}">Register Here</a>
             </div>
         </form>
 

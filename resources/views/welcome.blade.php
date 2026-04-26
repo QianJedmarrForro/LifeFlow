@@ -34,16 +34,26 @@
             z-index: 2;
         }
 
-        .logo-circle {
-            width: 100px;
-            height: 100px;
-            background: var(--red-rich);
-            border-radius: 50%;
+        /* Container for your logo component */
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            box-shadow: 0 0 30px rgba(169, 38, 38, 0.3);
+            background: white; /* Optional: gives a clean white base for the logo circle */
+            border-radius: 50%;
+            overflow: hidden; /* This forces the logo into a circle shape */
+            box-shadow: 0 0 30px rgba(169, 38, 38, 0.4);
+            border: 4px solid var(--red-rich);
+        }
+
+        /* Target the image inside the component */
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
         }
 
         .hero h1 {
@@ -85,7 +95,6 @@
             box-shadow: 0 15px 35px rgba(169, 38, 38, 0.4);
         }
 
-        /* Stats Section */
         .bb-stats {
             display: flex;
             justify-content: center;
@@ -128,10 +137,8 @@
     <div class="ambient-glow"></div>
     
     <div class="hero">
-        <div class="logo-circle">
-            <svg width="50" height="50" viewBox="0 0 24 24" fill="white">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
+        <div class="logo-container">
+            <x-logo />
         </div>
 
         <h1>Life<span>Flow</span></h1>

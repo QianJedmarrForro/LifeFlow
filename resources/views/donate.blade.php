@@ -105,12 +105,12 @@
 
 <div class="page-main-container">
 
-    <div class="lf-page-header">
-        <h1 class="lf-page-title">Donor Information</h1>
-        <div style="font-weight: 600; color: #64748b;">
-            April 24, 2026 🔔
-        </div>
+  <div class="lf-page-header">
+    <h1 class="lf-page-title">Donor Information</h1>
+    <div style="font-weight: 600; color: #64748b;">
+        {{ now()->format('F j, Y') }} 🔔
     </div>
+</div>
 
     <div class="lf-card">
 

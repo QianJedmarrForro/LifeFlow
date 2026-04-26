@@ -10,16 +10,28 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('profile.update') }}"
+    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data"
           style="margin-top:25px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.05);">
 
         @csrf
-
-        <table style="width:100%;border-collapse:collapse;">
+        @method('PUT') <table style="width:100%;border-collapse:collapse;">
 
             <tr style="background:#f5f5f5;">
                 <th style="text-align:left;padding:15px;">Field</th>
                 <th style="text-align:left;padding:15px;">Input</th>
+            </tr>
+
+            <tr>
+                <td style="padding:15px;border-top:1px solid #eee;">Profile Photo</td>
+                <td style="padding:15px;border-top:1px solid #eee;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        @if(auth()->user()->profile_photo)
+                            <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" 
+                                 style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
+                        @endif
+                        <input type="file" name="profile_photo" accept="image/*">
+                    </div>
+                </td>
             </tr>
 
             <tr>
@@ -53,7 +65,7 @@
 
         <div style="padding:15px;">
             <button type="submit"
-                    style="background:#C0392B;color:#fff;padding:10px 20px;border:none;border-radius:8px;">
+                    style="background:#C0392B;color:#fff;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;">
                 Save Changes
             </button>
         </div>

@@ -5,136 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | {{ config('app.name', 'Blood Bank System') }}</title>
 
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet"/>
 
-<style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-        min-height: 100vh;
-        background: #fdf6f4;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'DM Sans', sans-serif;
-        overflow: hidden;
-    }
+        body {
+            min-height: 100vh;
+            background: #fdf6f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Sans', sans-serif;
+            overflow: hidden;
+        }
 
-    /* Background blobs */
-    .bb-blob-1, .bb-blob-2 {
-        position: fixed;
-        border-radius: 50%;
-        pointer-events: none;
-    }
+        /* Background blobs */
+        .bb-blob-1, .bb-blob-2 {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+        }
 
-    .bb-blob-1 {
-        width: 480px; height: 480px;
-        background: radial-gradient(circle, rgba(220,90,70,0.10) 0%, transparent 68%);
-        top: -120px; right: -100px;
-    }
+        .bb-blob-1 {
+            width: 480px; height: 480px;
+            background: radial-gradient(circle, rgba(220,90,70,0.10) 0%, transparent 68%);
+            top: -120px; right: -100px;
+        }
 
-    .bb-blob-2 {
-        width: 320px; height: 320px;
-        background: radial-gradient(circle, rgba(220,90,70,0.07) 0%, transparent 68%);
-        bottom: -60px; left: -60px;
-    }
+        .bb-blob-2 {
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(220,90,70,0.07) 0%, transparent 68%);
+            bottom: -60px; left: -60px;
+        }
 
-    .bb-register-container {
-        background: #fff;
-        border: 1px solid #f0dcd8;
-        border-radius: 24px;
-        padding: 2.5rem;
-        width: 100%;
-        max-width: 420px;
-        box-shadow: 0 8px 30px rgba(200,60,60,0.12);
-        z-index: 2;
-        text-align: center;
-    }
+        .bb-register-container {
+            background: #fff;
+            border: 1px solid #f0dcd8;
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 30px rgba(200,60,60,0.12);
+            z-index: 2;
+            text-align: center;
+        }
 
-    .bb-logo-wrap {
-        background: #fff;
-        border: 1px solid #f0dcd8;
-        border-radius: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.2rem;
-        box-shadow: 0 4px 20px rgba(200,60,60,0.10);
-    }
+        /* --- UPDATED LOGO SECTION --- */
+        .bb-logo-wrap {
+    width: 100%;
+    height: 100px; /* Constrains the height of the white-space heavy PNG */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -10px auto 0.5rem; /* Reduced margin since there is no box border */
+    overflow: hidden; 
+}
 
-    .bb-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 24px;
-        margin-bottom: 0.4rem;
-        color: #1e1a1a;
-    }
+        .bb-logo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Zoomed to 1.35x: Just enough to hide white edges without cutting the flame */
+            transform: scale(1.2); 
+        }
+        /* ---------------------------- */
 
-    .bb-title span { color: #c44040; }
+        .bb-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 0.4rem;
+            color: #1e1a1a;
+        }
 
-    .bb-sub {
-        font-size: 13px;
-        color: #8a7878;
-        margin-bottom: 1.6rem;
-    }
+        .bb-title span { color: #c44040; }
 
-    .bb-input-group {
-        text-align: left;
-        margin-bottom: 1.1rem;
-    }
+        .bb-sub {
+            font-size: 13px;
+            color: #8a7878;
+            margin-bottom: 1.6rem;
+        }
 
-    .bb-input-group label {
-        font-size: 12px;
-        color: #6e5c5c;
-        display: block;
-        margin-bottom: 4px;
-    }
+        .bb-input-group {
+            text-align: left;
+            margin-bottom: 1.1rem;
+        }
 
-    .bb-input {
-        width: 100%;
-        padding: 12px 14px;
-        border-radius: 10px;
-        border: 1px solid #f0dcd8;
-        font-size: 14px;
-    }
+        .bb-input-group label {
+            font-size: 12px;
+            color: #6e5c5c;
+            display: block;
+            margin-bottom: 4px;
+        }
 
-    .bb-input:focus {
-        outline: none;
-        border-color: #c44040;
-    }
+        .bb-input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #f0dcd8;
+            font-size: 14px;
+            transition: 0.2s;
+        }
 
-    .bb-btn {
-        width: 100%;
-        margin-top: 0.6rem;
-        background: #c44040;
-        color: #fff;
-        border: none;
-        padding: 13px;
-        border-radius: 100px;
-        font-size: 14px;
-        cursor: pointer;
-    }
+        .bb-input:focus {
+            outline: none;
+            border-color: #c44040;
+            box-shadow: 0 0 0 3px rgba(196, 64, 64, 0.05);
+        }
 
-    .bb-btn:hover { background: #b53636; }
+        .bb-btn {
+            width: 100%;
+            margin-top: 0.6rem;
+            background: #c44040;
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-    .bb-footer {
-        margin-top: 1.2rem;
-        font-size: 12px;
-        color: #8a7878;
-    }
+        .bb-btn:hover { background: #b53636; transform: translateY(-1px); }
 
-    .bb-footer a {
-        color: #c44040;
-        text-decoration: none;
-        font-weight: 500;
-    }
+        .bb-footer {
+            margin-top: 1.2rem;
+            font-size: 12px;
+            color: #8a7878;
+        }
 
-    .bb-error {
-        color: #c44040;
-        font-size: 12px;
-        margin-top: 4px;
-    }
-</style>
+        .bb-footer a {
+            color: #c44040;
+            text-decoration: none;
+            font-weight: 600;
+        }
 
+        .bb-error {
+            color: #c44040;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 <body>
 
@@ -143,52 +155,52 @@
 
 <div class="bb-register-container">
 
-<x-logo size="90" />
-
-<h1 class="bb-title">Create <span>Account</span></h1>
-<p class="bb-sub">Join the system and start saving lives.</p>
-
-<form method="POST" action="{{ route('register') }}">
-    @csrf
-
-    <div class="bb-input-group">
-        <label>Name</label>
-        <input type="text" name="name" class="bb-input" required value="{{ old('name') }}">
-        @error('name')
-            <div class="bb-error">{{ $message }}</div>
-        @enderror
+    <div class="bb-logo-wrap">
+        <x-logo />
     </div>
 
-    <div class="bb-input-group">
-        <label>Email</label>
-        <input type="email" name="email" class="bb-input" required value="{{ old('email') }}">
-        @error('email')
-            <div class="bb-error">{{ $message }}</div>
-        @enderror
-    </div>
+    <h1 class="bb-title">Create <span>Account</span></h1>
+    <p class="bb-sub">Join the system and start saving lives.</p>
 
-    <div class="bb-input-group">
-        <label>Password</label>
-        <input type="password" name="password" class="bb-input" required>
-        @error('password')
-            <div class="bb-error">{{ $message }}</div>
-        @enderror
-    </div>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
 
-    <div class="bb-input-group">
-        <label>Confirm Password</label>
-        <input type="password" name="password_confirmation" class="bb-input" required>
-    </div>
+        <div class="bb-input-group">
+            <label>Full Name</label>
+            <input type="text" name="name" class="bb-input" required value="{{ old('name') }}" placeholder="John Doe">
+            @error('name')
+                <div class="bb-error">{{ $message }}</div>
+            @enderror
+        </div>
 
-    <button type="submit" class="bb-btn">Register</button>
+        <div class="bb-input-group">
+            <label>Email Address</label>
+            <input type="email" name="email" class="bb-input" required value="{{ old('email') }}" placeholder="john@example.com">
+            @error('email')
+                <div class="bb-error">{{ $message }}</div>
+            @enderror
+        </div>
 
-    <div class="bb-footer">
-        Already have an account?
-        <a href="{{ route('login') }}">Login</a>
-    </div>
+        <div class="bb-input-group">
+            <label>Password</label>
+            <input type="password" name="password" class="bb-input" required placeholder="••••••••">
+            @error('password')
+                <div class="bb-error">{{ $message }}</div>
+            @enderror
+        </div>
 
-</form>
+        <div class="bb-input-group">
+            <label>Confirm Password</label>
+            <input type="password" name="password_confirmation" class="bb-input" required placeholder="••••••••">
+        </div>
 
+        <button type="submit" class="bb-btn">Register Account</button>
+
+        <div class="bb-footer">
+            Already have an account?
+            <a href="{{ route('login') }}">Login Here</a>
+        </div>
+    </form>
 </div>
 
 </body>

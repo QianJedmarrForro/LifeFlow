@@ -14,6 +14,14 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/about', function () {
+    return view('aboutus');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('contactus');
+})->name('contact');
+
 /*
 |--------------------------------------------------------------------------
 | Guest Routes

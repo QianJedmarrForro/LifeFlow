@@ -1,0 +1,321 @@
+<x-layout>
+
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #ef4444 0%, #c92a2a 100%);
+        color: white;
+        padding: 80px 40px;
+        text-align: center;
+        border-radius: 16px;
+        margin-bottom: 60px;
+        box-shadow: 0 20px 50px rgba(239, 68, 68, 0.2);
+    }
+
+    .about-hero h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 0 0 20px 0;
+        letter-spacing: -0.5px;
+    }
+
+    .about-hero p {
+        font-size: 18px;
+        margin: 0;
+        opacity: 0.95;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .content-section {
+        margin-bottom: 60px;
+    }
+
+    .mission-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .mission-card {
+        background: white;
+        padding: 32px;
+        border-radius: 12px;
+        border-left: 5px solid #ef4444;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .mission-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .mission-card-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .mission-card h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 12px 0;
+    }
+
+    .mission-card p {
+        color: #64748b;
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .impact-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-box {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-number {
+        font-size: 42px;
+        font-weight: 700;
+        color: #dc2626;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        font-size: 15px;
+        color: #7f1d1d;
+        font-weight: 600;
+    }
+
+    .description-text {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #475569;
+        max-width: 900px;
+        margin: 0 auto 30px;
+        text-align: center;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        color: white;
+        padding: 60px 40px;
+        border-radius: 16px;
+        text-align: center;
+        margin-top: 60px;
+    }
+
+    .cta-section h2 {
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0 0 15px 0;
+    }
+
+    .cta-section p {
+        font-size: 16px;
+        margin: 0 0 30px 0;
+        opacity: 0.9;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background: #ef4444;
+        color: white;
+        padding: 14px 32px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        border: 2px solid #ef4444;
+    }
+
+    .cta-button:hover {
+        background: #dc2626;
+        border-color: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+    }
+
+    .team-member {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-member-header {
+        height: 180px;
+        background: linear-gradient(135deg, #ef4444 0%, #c92a2a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 60px;
+    }
+
+    .team-member-info {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .team-member-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 5px 0;
+    }
+
+    .team-member-role {
+        font-size: 14px;
+        color: #ef4444;
+        margin: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+        font-family: 'DM Sans', sans-serif;
+    }
+</style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="about-hero">
+        <h1>About LifeFlow</h1>
+        <p>Connecting life-givers with life-savers. Every drop counts in our mission to save lives.</p>
+    </div>
+
+    <!-- Our Story Section -->
+    <div class="content-section">
+        <h2 class="section-title">Our Story</h2>
+        <p class="description-text">
+            LifeFlow was founded with a simple yet powerful vision: to revolutionize blood donation and management. 
+            We recognized that blood banks needed a modern, efficient solution to connect donors with those in need. 
+            Today, we're proud to be at the forefront of blood donation technology, helping healthcare facilities manage 
+            inventory while empowering donors to make a real difference in their communities.
+        </p>
+    </div>
+
+    <!-- Mission & Vision -->
+    <div class="content-section">
+        <h2 class="section-title">Our Mission & Vision</h2>
+        <div class="mission-cards">
+            <div class="mission-card">
+                <span class="mission-card-icon">🎯</span>
+                <h3>Our Mission</h3>
+                <p>To streamline blood donation management and create a reliable network that ensures safe, efficient blood supply to those who need it most.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-card-icon">💡</span>
+                <h3>Our Vision</h3>
+                <p>A world where no one dies from preventable blood loss, powered by technology that makes giving blood simple and rewarding.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-card-icon">❤️</span>
+                <h3>Our Values</h3>
+                <p>We believe in compassion, transparency, and innovation. Every action we take is guided by our commitment to saving lives.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Impact Section -->
+    <div class="content-section">
+        <h2 class="section-title">Our Impact</h2>
+        <div class="impact-stats">
+            <div class="stat-box">
+                <div class="stat-number">5000+</div>
+                <div class="stat-label">Registered Donors</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">12000+</div>
+                <div class="stat-label">Units Collected</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Lives Saved</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Emergency Support</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose LifeFlow -->
+    <div class="content-section">
+        <h2 class="section-title">Why Choose LifeFlow?</h2>
+        <div class="mission-cards">
+            <div class="mission-card">
+                <span class="mission-card-icon">🔒</span>
+                <h3>Secure & Reliable</h3>
+                <p>Your health data is protected with enterprise-grade security. We never compromise on safety.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-card-icon">⚡</span>
+                <h3>Fast & Efficient</h3>
+                <p>Real-time blood inventory tracking ensures quick access to the right blood type when needed most.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-card-icon">🌍</span>
+                <h3>Community Driven</h3>
+                <p>We're built by donors, for donors. Your feedback shapes our platform and our mission.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-card-icon">📱</span>
+                <h3>Easy to Use</h3>
+                <p>Intuitive design makes donating blood and requesting units as simple as a few clicks.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-card-icon">🏥</span>
+                <h3>Hospital Certified</h3>
+                <p>Trusted by hospitals and medical facilities across the region for reliability and accuracy.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-card-icon">📊</span>
+                <h3>Transparent Tracking</h3>
+                <p>Monitor your donations and see the real impact you're making on the lives you've saved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2>Ready to Save Lives?</h2>
+        <p>Join thousands of donors making a difference every day. Your blood can save up to three lives.</p>
+        <a href="{{ route('register') }}" class="cta-button">Get Started Today</a>
+    </div>
+</div>
+
+</x-layout>

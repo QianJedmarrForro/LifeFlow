@@ -208,6 +208,8 @@
         <a href="{{ route('donations.index') }}" class="lf-nav-item {{ request()->routeIs('donations.index') ? 'active' : '' }}">Blood Donations</a>
         <a href="{{ route('blood-requests.index') }}" class="lf-nav-item {{ request()->routeIs('blood-requests.index') ? 'active' : '' }}">Blood Requests</a>
         <a href="{{ route('donors.records') }}" class="lf-nav-item {{ request()->routeIs('donors.records') ? 'active' : '' }}">Donor Records</a>
+        <a href="{{ route('about') }}" class="lf-nav-item {{ request()->routeIs('about') ? 'active' : '' }}">About Us</a>
+        <a href="{{ route('contact') }}" class="lf-nav-item {{ request()->routeIs('contact') ? 'active' : '' }}">Contact Us</a>
         
         @auth
             @if(auth()->user()->role === 'admin')

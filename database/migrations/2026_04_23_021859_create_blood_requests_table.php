@@ -20,7 +20,12 @@ return new class extends Migration
             $table->string('priority');
             $table->date('needed_by');
             $table->string('patient_name');
-            $table->text('reason');
+            $table->text('reason')->nullable(); // Set to nullable in case reason is empty
+            
+            // --- THE FIX: ADD THIS COLUMN ---
+            $table->string('status')->default('pending'); 
+            // --------------------------------
+            
             $table->timestamps();
         });
     }

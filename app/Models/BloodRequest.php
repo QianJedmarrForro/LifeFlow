@@ -21,6 +21,7 @@ class BloodRequest extends Model
         'needed_by',
         'patient_name',
         'reason',
+        'status' // Added this to allow mass assignment of status
     ];
 
     /**

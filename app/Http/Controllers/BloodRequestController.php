@@ -4,43 +4,63 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BloodRequest;
-use App\Models\User; // Gidugang para sa Donors list
+use App\Models\Donation;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class BloodRequestController extends Controller
 {
     /**
-     * Display the records page with donors and requests.
+     * Compatibility Map: Defines which blood types a recipient can receive.
+     */
+    protected $compatibilityMap = [
+        'A+'  => ['A+', 'A-', 'O+', 'O-'],
+        'A-'  => ['A-', 'O-'],
+        'B+'  => ['B+', 'B-', 'O+', 'O-'],
+        'B-'  => ['B-', 'O-'],
+        'AB+' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+        'AB-' => ['A-', 'B-', 'AB-', 'O-'],
+        'O+'  => ['O+', 'O-'],
+        'O-'  => ['O-'],
+    ];
+
+    /**
+     * Admin/Management View
      */
     public function index()
     {
-        $user = auth()->user();
-
-        if (!$user) {
-            return redirect()->route('login');
-        }
-
-        // 1. Kuhaon ang mga Donors (mga users nga naay role nga 'user')
         $donors = User::where('role', 'user')->get();
-
-        // 2. Kuhaon ang tanang Blood Requests para sa Management Records
         $requests = BloodRequest::latest()->get();
 
-        // 3. I-return ang 'records' view (siguroha nga records.blade.php ang filename)
-        return view('records', compact('donors', 'requests'));
+        // Optimized Inventory Calculation
+        $bloodTypes = array_keys($this->compatibilityMap);
+        $inventory = [];
+
+        foreach ($bloodTypes as $type) {
+            $in = Donation::where('blood_type', $type)->sum('units');
+            $out = BloodRequest::where('blood_type', $type)
+                               ->where('status', 'approved')
+                               ->sum('units');
+            
+            $inventory[$type] = max(0, $in - $out);
+        }
+
+        return view('blood-requests.index', compact('donors', 'requests', 'inventory'));
     }
 
     /**
-     * Handle the submission of a new blood request.
+     * Show the Request Form for Regular Users
+     */
+    public function create()
+    {
+        return view('blood-requests.create');
+    }
+
+    /**
+     * Handle the form submission
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
-
-        if (!$user) {
-            return redirect()->route('login');
-        }
-
         $validated = $request->validate([
             'hospital'     => 'required|string|max:255',
             'blood_type'   => 'required|string',
@@ -51,14 +71,52 @@ class BloodRequestController extends Controller
             'reason'       => 'nullable|string',
         ]);
 
-        // I-attach ang ID sa nag-login nga user
-        $validated['user_id'] = $user->id;
+        $validated['user_id'] = auth()->id();
+        $validated['status'] = 'pending';
 
-        // Save sa database
         BloodRequest::create($validated);
 
         return redirect()
-            ->route('records.index') // Gi-update gikan sa blood-requests.index
+            ->route('dashboard')
             ->with('success', 'Blood request submitted successfully!');
+    }
+
+    /**
+     * Admin: Approve a request using Blood Compatibility Logic
+     */
+    public function approve($id)
+    {
+        $bloodRequest = BloodRequest::findOrFail($id);
+        $recipientType = $bloodRequest->blood_type;
+
+        // Get list of blood types this patient can safely receive
+        $compatibleTypes = $this->compatibilityMap[$recipientType] ?? [$recipientType];
+
+        // Calculate total available volume across all compatible types
+        $totalIn = Donation::whereIn('blood_type', $compatibleTypes)->sum('units');
+        $totalOut = BloodRequest::whereIn('blood_type', $compatibleTypes)
+                                ->where('status', 'approved')
+                                ->sum('units');
+                                     
+        $availableCompatibleUnits = $totalIn - $totalOut;
+
+        if ($availableCompatibleUnits < $bloodRequest->units) {
+            return back()->with('error', "Insufficient stock! Total compatible volume for {$recipientType} is only {$availableCompatibleUnits}ml.");
+        }
+
+        $bloodRequest->update(['status' => 'approved']);
+
+        return back()->with('success', "Request approved using compatible stock logic.");
+    }
+
+    /**
+     * Admin: Reject a request
+     */
+    public function reject($id)
+    {
+        $bloodRequest = BloodRequest::findOrFail($id);
+        $bloodRequest->update(['status' => 'rejected']);
+        
+        return back()->with('success', 'Request has been rejected.');
     }
 }

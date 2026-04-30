@@ -2,64 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Donation;
-use App\Models\BloodRequest;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+// --- IMPORTANT: THESE TWO ARE REQUIRED FOR LARAVEL 11 ---
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class DonationController extends Controller
+class DonationController extends Controller implements HasMiddleware
 {
-    public function index()
+    /**
+     * Define middleware for the controller.
+     */
+    public static function middleware(): array
     {
-        return view('donate');
+        return [
+            // This ensures only logged-in users can access any method here
+            new Middleware('auth'),
+            
+            // Optional: Only allow regular users to access the 'create' and 'store' methods
+            // new Middleware('can:user-only', only: ['create', 'store']),
+        ];
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name'       => 'required|string|max:255',
-            'dob'        => 'required|date',
-            'address'    => 'nullable|string|max:255',
-            'email'      => 'required|email|max:255',
-            'phone'      => 'nullable|string|max:20',
-            'blood_type' => 'required|string',
-            'units'      => 'nullable|integer|min:1',
-            'eligible'   => 'required|accepted',
-        ]);
-
-        $userId = Auth::id();
-
-        if (!$userId) {
-            return redirect()->route('login');
-        }
-
-        $validated['user_id'] = $userId;
-        $validated['eligible'] = true;
-        $validated['units'] = $request->filled('units') ? $request->units : 450;
-
-        Donation::create($validated);
-
-        return redirect()
-            ->route('donations.index')
-            ->with('success', 'Thank you! Your donation request has been submitted.');
-    }
-
+    /**
+     * Display a listing of donations (for Admins).
+     */
     public function showRecords()
     {
-        $userId = Auth::id();
+        $donations = Donation::with('user')->latest()->get();
+        return view('donor-records', compact('donations'));
+    }
 
-        if (!$userId) {
-            return redirect()->route('login');
-        }
+    /**
+     * Show the form for creating a new donation.
+     */
+    public function create()
+    {
+        return view('donations.create');
+    }
 
-        $donors = Donation::where('user_id', $userId)
-            ->latest()
-            ->get();
+    /**
+     * Store a newly created donation in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'blood_type' => 'required',
+            'units' => 'required|integer|min:1',
+            'date' => 'required|date',
+        ]);
 
-        $requests = BloodRequest::where('user_id', $userId)
-            ->latest()
-            ->get();
+        Donation::create([
+            'user_id' => Auth::id(),
+            'name' => Auth::user()->name,
+            'email' => Auth::user()->email,
+            'blood_type' => $request->blood_type,
+            'units' => $request->units,
+            'status' => 'pending',
+        ]);
 
-        return view('donor-records', compact('donors', 'requests'));
+        return redirect()->route('dashboard')->with('success', 'Donation recorded successfully!');
     }
 }

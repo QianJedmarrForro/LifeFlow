@@ -1,5 +1,4 @@
 <x-layout>
-
 <style>
     .page-main-container {
         font-family: 'DM Sans', sans-serif;
@@ -56,6 +55,12 @@
         font-family: inherit;
         box-sizing: border-box;
         font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+        border-color: #3b82f6;
     }
 
     .btn-submit {
@@ -104,93 +109,76 @@
 </style>
 
 <div class="page-main-container">
-
-  <div class="lf-page-header">
-    <h1 class="lf-page-title">Donor Information</h1>
-    <div style="font-weight: 600; color: #64748b;">
-        {{ now()->format('F j, Y') }} 🔔
+    <div class="lf-page-header">
+        <h1 class="lf-page-title">Donation Registration</h1>
+        <div style="font-weight: 600; color: #64748b;">
+            {{ now()->format('F j, Y') }} 🔔
+        </div>
     </div>
-</div>
 
     <div class="lf-card">
-
-        <h2 style="margin-bottom: 25px;">Registration Form</h2>
+        <h2 style="margin-bottom: 25px; color: #1e293b;">Donor Information</h2>
 
         <form action="{{ route('donations.store') }}" method="POST">
             @csrf
 
-            <!-- FULL NAME -->
             <div style="margin-bottom: 20px;">
                 <label class="form-label">Full Name</label>
-                <input type="text" name="name" class="form-input"
-                    placeholder="Enter full name" required>
+                <input type="text" name="name" class="form-input" value="{{ auth()->user()->name }}" required>
             </div>
 
-            <!-- DOB + ADDRESS -->
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                 <div>
                     <label class="form-label">Date of Birth</label>
                     <input type="date" name="dob" class="form-input" required>
                 </div>
-
                 <div>
                     <label class="form-label">Address</label>
-                    <input type="text" name="address" class="form-input"
-                        placeholder="Enter complete address">
+                    <input type="text" name="address" class="form-input" placeholder="City, Province" required>
                 </div>
             </div>
 
-            <!-- EMAIL + PHONE -->
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
-                <div>
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-input"
-                        placeholder="Enter email address" required>
-                </div>
-
-                <div>
-                    <label class="form-label">Phone Number</label>
-                    <input type="text" name="phone" class="form-input"
-                        placeholder="Enter phone number (e.g. 09XXXXXXXXX)">
-                </div>
-            </div>
-
-            <!-- BLOOD TYPE -->
             <div style="margin-bottom:25px;">
                 <label class="form-label">Select Blood Type</label>
-
                 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
                     @foreach(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $type)
-
                         <label>
                             <input type="radio" name="blood_type" value="{{ $type }}" required
                                 style="display:none;"
                                 id="type_{{ $type }}"
                                 onchange="updateBloodSelection()">
-
-                            <div class="blood-option"
-                                id="label_{{ $type }}"
+                            <div class="blood-option" id="label_{{ $type }}"
                                 onclick="document.getElementById('type_{{ $type }}').checked = true; updateBloodSelection();">
                                 {{ $type }}
                             </div>
                         </label>
-
                     @endforeach
                 </div>
             </div>
 
-            <!-- ELIGIBILITY -->
+            <div style="margin-bottom: 25px;">
+                <label class="form-label">Volume to Donate (ml)</label>
+                <input type="number" name="units" class="form-input" 
+                       placeholder="Standard donation is 450" value="450" min="100" max="1000" required>
+                <small style="color: #64748b; font-size: 11px; margin-top: 5px; display: block;">
+                    * 450ml is the standard volume for a single bag.
+                </small>
+            </div>
+
             <div style="margin-bottom:30px; background:#f8fafc; padding:15px; border-radius:10px; border:1px solid #e2e8f0;">
-                <label style="display:flex; align-items:center; gap:12px; font-size:14px;">
-                    <input type="checkbox" name="eligible" value="1" required>
-                    I confirm eligibility
+                <label style="display:flex; align-items:center; gap:12px; font-size:14px; cursor: pointer;">
+                    <input type="checkbox" name="eligible" value="1" required style="width: 18px; height: 18px;">
+                    <span>I confirm that I am in good health and meet the eligibility requirements for blood donation.</span>
                 </label>
             </div>
 
             <button type="submit" class="btn-submit">
-                Submit Donation Request
+                Submit Donation Record
             </button>
 
+            <a href="{{ route('dashboard') }}" style="display: block; text-align: center; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600;">
+                ← Back to Dashboard
+            </a>
         </form>
     </div>
 </div>
@@ -198,18 +186,17 @@
 <script>
 function updateBloodSelection() {
     const types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-
     types.forEach(type => {
         let radio = document.getElementById('type_' + type);
         let label = document.getElementById('label_' + type);
-
-        if (radio.checked) {
-            label.classList.add('selected');
-        } else {
-            label.classList.remove('selected');
+        if (radio && label) {
+            if (radio.checked) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
+            }
         }
     });
 }
 </script>
-
 </x-layout>

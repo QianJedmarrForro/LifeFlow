@@ -1,77 +1,123 @@
 <x-layout>
+<style>
+    .profile-container {
+        font-family: 'DM Sans', sans-serif;
+        padding: 40px;
+        background-color: #f8fafc;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+    }
+    .profile-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        width: 100%;
+        max-width: 600px;
+    }
+    .photo-upload-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .current-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #f1f5f9;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-label {
+        display: block;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-family: inherit;
+        font-size: 15px;
+        transition: 0.2s;
+        box-sizing: border-box;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: #ef4444;
+        background: #fff;
+    }
+    .btn-save {
+        width: 100%;
+        background: #1e293b;
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+    .btn-save:hover {
+        background: #0f172a;
+        transform: translateY(-2px);
+    }
+</style>
 
-<div style="padding:40px;font-family:DM Sans;">
+<div class="profile-container">
+    <div class="profile-card">
+        <h2 style="margin: 0 0 10px 0; font-size: 24px; color: #1e293b;">Account Settings</h2>
+        <p style="color: #64748b; margin-bottom: 30px;">Update your personal information and profile picture.</p>
 
-    <h1 style="font-size:28px;font-weight:700;">Edit Profile</h1>
+        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
 
-    @if(session('success'))
-        <div style="margin-top:15px;color:green;font-weight:600;">
-            {{ session('success') }}
-        </div>
-    @endif
+            <div class="photo-upload-section">
+                @if(auth()->user()->profile_photo)
+                    <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" class="current-avatar">
+                @else
+                    <div class="current-avatar" style="display: flex; align-items: center; justify-content: center; background: #f1f5f9; font-size: 40px;">👤</div>
+                @endif
+                <label for="profile_photo" style="cursor: pointer; color: #ef4444; font-weight: 600; font-size: 14px;">Change Photo</label>
+                <input type="file" name="profile_photo" id="profile_photo" style="display: none;" onchange="this.form.submit()">
+            </div>
 
-    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data"
-          style="margin-top:25px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-input" value="{{ old('name', auth()->user()->name) }}" required>
+            </div>
 
-        @csrf
-        @method('PUT') <table style="width:100%;border-collapse:collapse;">
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-input" value="{{ old('email', auth()->user()->email) }}" required>
+            </div>
 
-            <tr style="background:#f5f5f5;">
-                <th style="text-align:left;padding:15px;">Field</th>
-                <th style="text-align:left;padding:15px;">Input</th>
-            </tr>
+            <div class="form-group">
+                <label class="form-label">New Password (leave blank to keep current)</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••">
+            </div>
 
-            <tr>
-                <td style="padding:15px;border-top:1px solid #eee;">Profile Photo</td>
-                <td style="padding:15px;border-top:1px solid #eee;">
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        @if(auth()->user()->profile_photo)
-                            <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" 
-                                 style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
-                        @endif
-                        <input type="file" name="profile_photo" accept="image/*">
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td style="padding:15px;border-top:1px solid #eee;">Name</td>
-                <td style="padding:15px;border-top:1px solid #eee;">
-                    <input type="text" name="name"
-                           value="{{ auth()->user()->name }}"
-                           style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">
-                </td>
-            </tr>
-
-            <tr>
-                <td style="padding:15px;border-top:1px solid #eee;">Email</td>
-                <td style="padding:15px;border-top:1px solid #eee;">
-                    <input type="email" name="email"
-                           value="{{ auth()->user()->email }}"
-                           style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">
-                </td>
-            </tr>
-
-            <tr>
-                <td style="padding:15px;border-top:1px solid #eee;">New Password</td>
-                <td style="padding:15px;border-top:1px solid #eee;">
-                    <input type="password" name="password"
-                           placeholder="Leave blank to keep current password"
-                           style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">
-                </td>
-            </tr>
-
-        </table>
-
-        <div style="padding:15px;">
-            <button type="submit"
-                    style="background:#C0392B;color:#fff;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;">
-                Save Changes
-            </button>
-        </div>
-
-    </form>
-
+            <button type="submit" class="btn-save">Save Changes</button>
+            
+            <a href="{{ route('dashboard') }}" style="display: block; text-align: center; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 14px;">
+                Back to Dashboard
+            </a>
+        </form>
+    </div>
 </div>
-
 </x-layout>

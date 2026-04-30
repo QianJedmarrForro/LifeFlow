@@ -6,6 +6,8 @@
     <title>Login | {{ config('app.name', 'Blood Bank System') }}</title>
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet"/>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,15 +52,14 @@
             text-align: center;
         }
 
-        /* --- LOGO FIX SECTION --- */
         .bb-logo-wrapper {
             width: 120px;
             height: 120px;
-            margin: -25px auto 5px auto; /* Pulls logo up and adds slight bottom spacing */
+            margin: -25px auto 5px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden; /* Clips the white space edges of the PNG */
+            overflow: hidden;
             position: relative;
         }
 
@@ -66,9 +67,8 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            transform: scale(1.2); /* Zooms in to hide the empty white space */
+            transform: scale(1.2);
         }
-        /* ------------------------ */
 
         .bb-title {
             font-family: 'Playfair Display', serif;
@@ -88,6 +88,7 @@
         .bb-input-group {
             text-align: left;
             margin-bottom: 1.1rem;
+            position: relative; /* Added for icon positioning */
         }
 
         .bb-input-group label {
@@ -106,11 +107,34 @@
             transition: 0.2s;
         }
 
+        /* Prevent text overlapping with the eye icon */
+        .bb-input-password {
+            padding-right: 42px;
+        }
+
         .bb-input:focus {
             outline: none;
             border-color: #c44040;
             box-shadow: 0 0 0 3px rgba(196, 64, 64, 0.1);
         }
+
+        /* Toggle Button Styles */
+        .bb-toggle-btn {
+            position: absolute;
+            right: 12px;
+            bottom: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #8a7878;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .bb-toggle-btn:hover { color: #c44040; }
 
         .bb-btn {
             width: 100%;
@@ -148,6 +172,8 @@
             font-size: 12px;
             margin-top: 4px;
         }
+
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body>
@@ -175,9 +201,25 @@
                 @enderror
             </div>
 
-            <div class="bb-input-group">
+            <div class="bb-input-group" x-data="{ show: false }">
                 <label>Password</label>
-                <input type="password" name="password" class="bb-input" required placeholder="••••••••">
+                <input :type="show ? 'text' : 'password'" 
+                       name="password" 
+                       class="bb-input bb-input-password" 
+                       required 
+                       placeholder="Enter your password">
+                
+                <button type="button" class="bb-toggle-btn" @click="show = !show" tabindex="-1">
+                    <svg x-show="!show" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg x-show="show" x-cloak width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                </button>
+
                 @error('password')
                     <div class="bb-error">{{ $message }}</div>
                 @enderror

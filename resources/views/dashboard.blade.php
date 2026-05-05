@@ -1,4 +1,148 @@
 <x-layout>
+    <style>
+        .reward-toast {
+            position: fixed;
+            top: 90px;
+            right: 24px;
+            z-index: 9999;
+            background: #ffffff;
+            border: 1px solid rgba(229, 231, 235, 0.9);
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.16);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            opacity: 0;
+            transform: translateY(-20px) scale(0.96);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+        .reward-toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .reward-bag {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+            font-size: 24px;
+            box-shadow: inset 0 -8px 0 rgba(255,255,255,0.18), 0 12px 25px rgba(0,0,0,0.16);
+            animation: floatBag 2.4s ease-in-out infinite;
+        }
+        .reward-toast h4 {
+            margin: 0;
+            font-size: 15px;
+            color: #111827;
+            font-weight: 800;
+        }
+        .reward-toast p {
+            margin: 0;
+            color: #4b5563;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        @keyframes floatBag {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .reward-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease;
+            z-index: 9998;
+        }
+        .reward-modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .reward-modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0.96);
+            width: min(540px, calc(100% - 32px));
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+            transition: transform 0.28s ease, opacity 0.28s ease;
+            opacity: 0;
+            z-index: 9999;
+        }
+        .reward-modal.open {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .reward-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .reward-modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #111827;
+        }
+        .reward-modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #374151;
+            font-weight: 700;
+        }
+        .reward-progress-track {
+            width: 100%;
+            background: #f8fafc;
+            border-radius: 999px;
+            height: 16px;
+            overflow: hidden;
+            margin-top: 18px;
+        }
+        .reward-progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+            transition: width 0.4s ease;
+        }
+        .status-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: #10b981;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .status-action span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            font-size: 16px;
+        }
+    </style>
     <div style="max-width: 1200px; margin: 0 auto; font-family: 'DM Sans', sans-serif;">
         
         {{-- SUCCESS NOTIFICATION --}}
@@ -21,6 +165,16 @@
             </style>
         @endif
 
+        @if(session('reward'))
+            <div id="reward-toast" class="reward-toast">
+                <div class="reward-bag">🩸</div>
+                <div>
+                    <h4>You gained one point!</h4>
+                    <p>Your donation was recorded. Keep going to unlock more rewards.</p>
+                </div>
+            </div>
+        @endif
+
         <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
             <div>
                 <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome back, {{ auth()->user()->name }} 👋</h1>
@@ -28,7 +182,11 @@
             </div>
             <div style="text-align: right;">
                 <span style="display: block; font-size: 12px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Current Status</span>
-                <span style="color: #22c55e; font-weight: 700;">● Active Donor</span>
+                <div class="status-action" id="rewards-trigger">
+                    <span>🩸</span>
+                    <div>Donation Rewards</div>
+                </div>
+                <span style="display:block; margin-top: 6px; color: #22c55e; font-weight: 700;">● Active Donor</span>
             </div>
         </div>
 
@@ -134,4 +292,68 @@
 
         </div>
     </div>
+
+    <div id="reward-modal-overlay" class="reward-modal-overlay"></div>
+    <div id="reward-modal" class="reward-modal" aria-hidden="true">
+        <div class="reward-modal-header">
+            <div>
+                <h3>Donation Rewards</h3>
+                <p style="margin: 6px 0 0; color: #6b7280; font-size: 13px; max-width: 360px;">Track your progress, points, and how close you are to the next reward milestone.</p>
+            </div>
+            <button id="reward-modal-close" class="reward-modal-close">✕</button>
+        </div>
+        <div style="display: flex; gap: 18px; align-items: center; margin-bottom: 20px;">
+            <div class="reward-bag" style="width: 62px; height: 62px; font-size: 28px;">🩸</div>
+            <div>
+                <div style="font-size: 15px; font-weight: 800; color: #111827;">{{ $totalDonations }} donation{{ $totalDonations == 1 ? '' : 's' }} completed</div>
+                <div style="font-size: 13px; color: #6b7280; margin-top: 6px;">You've earned {{ $totalDonations }} point{{ $totalDonations == 1 ? '' : 's' }} so far.</div>
+            </div>
+        </div>
+        <div style="font-size: 13px; color: #6b7280; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <span>Progress to {{ $donationMilestone }} donations</span>
+            <span>{{ $donationProgress }}%</span>
+        </div>
+        <div class="reward-progress-track">
+            <div id="reward-progress-fill" class="reward-progress-fill" style="width: {{ $donationProgress }}%;"></div>
+        </div>
+    </div>
 </x-layout>
+
+<script>
+(function() {
+    const trigger = document.getElementById('rewards-trigger');
+    const overlay = document.getElementById('reward-modal-overlay');
+    const modal = document.getElementById('reward-modal');
+    const closeBtn = document.getElementById('reward-modal-close');
+    const toast = document.getElementById('reward-toast');
+
+    function openModal() {
+        overlay.classList.add('open');
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+    function closeModal() {
+        overlay.classList.remove('open');
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+    }
+
+    if (trigger) {
+        trigger.addEventListener('click', openModal);
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+    if (overlay) {
+        overlay.addEventListener('click', function(event) {
+            if (event.target === overlay) {
+                closeModal();
+            }
+        });
+    }
+    if (toast) {
+        requestAnimationFrame(() => toast.classList.add('show'));
+        setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+})();
+</script>

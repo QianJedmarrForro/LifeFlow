@@ -65,8 +65,8 @@
     <div class="page-main-container">
         <div class="lf-page-header">
             <div>
-                <h1 class="lf-page-title">Donor Directory</h1>
-                <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Manage and view all registered blood donors.</p>
+                <h1 class="lf-page-title">{{ $heading ?? 'Donor Directory' }}</h1>
+                <p style="color: #64748b; font-size: 14px; margin-top: 5px;">{{ $description ?? 'Manage and view all registered blood donors.' }}</p>
             </div>
             <div style="font-weight: 600; color: #64748b; background: white; padding: 10px 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
                 {{ now()->format('F d, Y') }} 📅

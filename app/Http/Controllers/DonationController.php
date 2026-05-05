@@ -27,8 +27,15 @@ class DonationController extends Controller implements HasMiddleware
      */
     public function showRecords()
     {
-        $donations = Donation::with('user')->latest()->get();
-        return view('donor-records', compact('donations'));
+        $donations = Donation::where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return view('donor-records', [
+            'donors' => $donations,
+            'heading' => 'Donation Records',
+            'description' => 'Review the blood donation records linked to your account.',
+        ]);
     }
 
     /**
@@ -62,8 +69,9 @@ class DonationController extends Controller implements HasMiddleware
     'status'     => 'approved', 
 ]);
 
-        // 3. Redirect back with success message
-        // Make sure 'dashboard' route is the correct landing page for your users
-        return redirect()->route('dashboard')->with('success', 'Thank you! Your donation has been recorded and added to the inventory.');
+        // 3. Redirect back with success message and reward animation trigger
+        return redirect()->route('dashboard')
+            ->with('success', 'Thank you! Your donation has been recorded and added to the inventory.')
+            ->with('reward', true);
     }
 }

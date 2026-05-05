@@ -67,14 +67,19 @@ class DashboardController extends Controller
             ],
         ]);
 
+        $donationProgress = min(100, round(($totalDonationsCount / 10) * 100));
+
         // 4. VIEW DATA MAPPING
         return view('dashboard', [
-            'totalDonations'  => $totalDonationsCount,
-            'totalUnits'      => $totalUnitsDonated,
-            'totalRequests'   => $totalRequestsCount,
-            'donationHistory' => $donationHistory,
-            'requestHistory'  => $requestHistory,
-            'announcements'   => $announcements,
+            'totalDonations'   => $totalDonationsCount,
+            'totalUnits'       => $totalUnitsDonated,
+            'totalRequests'    => $totalRequestsCount,
+            'donationHistory'  => $donationHistory,
+            'requestHistory'   => $requestHistory,
+            'announcements'    => $announcements,
+            'donationPoints'   => $totalDonationsCount,
+            'donationProgress' => $donationProgress,
+            'donationMilestone'=> 10,
         ]);
     }
 }

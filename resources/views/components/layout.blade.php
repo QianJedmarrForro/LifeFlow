@@ -223,6 +223,9 @@
             </a>
 
             <div style="padding: 20px 32px 10px; font-size: 11px; color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Activities</div>
+            <a href="{{ route('information') }}" class="lf-nav-item {{ request()->routeIs('information') ? 'active' : '' }}">
+                <span class="icon-box">📘</span> Donation Information
+            </a>
             <a href="{{ route('donations.create') }}" class="lf-nav-item {{ request()->routeIs('donations.create') ? 'active' : '' }}">
                 <span class="icon-box">❤️</span> Donate Blood
             </a>

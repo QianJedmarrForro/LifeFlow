@@ -40,6 +40,9 @@ Route::middleware('auth')->group(function () {
         // Blood Donation Process
         Route::get('/donate/create', [DonationController::class, 'create'])->name('donations.create');
         Route::post('/donate', [DonationController::class, 'store'])->name('donations.store');
+        Route::get('/information', function () {
+            return view('information');
+        })->name('information');
 
         // Blood Request Process
         Route::get('/blood-requests/create', [BloodRequestController::class, 'create'])->name('blood-requests.create');

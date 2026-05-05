@@ -12,7 +12,7 @@
             <div>
                 <div style="background: #0A0A0A; padding: 40px; border-radius: 24px; text-align: center; border: 1px solid rgba(192, 57, 43, 0.3); position: sticky; top: 20px;">
                     <div style="position: relative; display: inline-block; margin-bottom: 20px;">
-                        <div style="width: 120px; height: 120px; border-radius: 50%; background: #1a1a1a; border: 4px solid #C0392B; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <div id="profile-avatar-container" style="width: 120px; height: 120px; border-radius: 50%; background: #1a1a1a; border: 4px solid #C0392B; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                             {{-- Check if user has photo AND the file actually exists in storage --}}
                             @if(auth()->user()->profile_photo)
                                 <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" 
@@ -43,7 +43,8 @@
 
                     <div style="margin-bottom: 25px;">
                         <label style="display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: #1e293b;">Update Profile Photo</label>
-                        <input type="file" name="profile_photo" accept="image/*" style="font-size: 13px; color: #64748b; width: 100%;">
+                        <input type="file" name="profile_photo" id="profile_photo" accept="image/*" style="display: none;">
+                        <button type="button" id="upload-btn" style="background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 10px; cursor: pointer; font-size: 13px; width: 100%; text-align: left;">Choose File</button>
                         <p style="font-size: 11px; color: #94a3b8; margin-top: 5px;">Recommended: Square JPG or PNG. Max 2MB.</p>
                     </div>
 
@@ -78,3 +79,38 @@
         </div>
     </div>
 </x-layout>
+
+<script>
+document.getElementById('upload-btn').addEventListener('click', function() {
+    document.getElementById('profile_photo').click();
+});
+
+document.getElementById('profile_photo').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const btn = document.getElementById('upload-btn');
+    if (file) {
+        btn.textContent = file.name;
+        // Existing preview code
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const container = document.getElementById('profile-avatar-container');
+            const img = container.querySelector('img');
+            if (img) {
+                img.src = e.target.result;
+                img.style.display = 'block';
+                const span = container.querySelector('span');
+                if (span) span.style.display = 'none';
+            } else {
+                const span = container.querySelector('span');
+                const newImg = document.createElement('img');
+                newImg.src = e.target.result;
+                newImg.style = "width: 100%; height: 100%; object-fit: cover;";
+                container.replaceChild(newImg, span);
+            }
+        };
+        reader.readAsDataURL(file);
+    } else {
+        btn.textContent = 'Choose File';
+    }
+});
+</script>

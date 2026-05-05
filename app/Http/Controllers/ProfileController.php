@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage; // Added this for image handling
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -23,16 +23,18 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
+        // 1. Validate the incoming request
         $request->validate([
-            'name' => ['required'],
-            'email' => ['required', 'email'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'blood_type' => ['nullable', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'], // Added blood type validation
             'password' => ['nullable', 'min:6'],
-            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Added validation
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'], 
         ]);
 
-        // Handle the Image Upload
+        // 2. Handle the Image Upload
         if ($request->hasFile('profile_photo')) {
-            // Delete the old photo if it exists to save space
+            // Delete the old photo from storage if it exists to keep it clean
             if ($user->profile_photo) {
                 Storage::disk('public')->delete($user->profile_photo);
             }
@@ -42,15 +44,18 @@ class ProfileController extends Controller
             $user->profile_photo = $path;
         }
 
+        // 3. Update User Information
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->blood_type = $request->blood_type; // Added this to save the blood type
 
-        if ($request->password) {
+        // 4. Update Password if provided
+        if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
         $user->save();
 
-        return back()->with('success', 'Profile updated successfully');
+        return back()->with('success', 'Profile updated successfully!');
     }
 }

@@ -156,57 +156,65 @@
         box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
     }
 
-    .team-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 30px;
-    }
-
-    .team-member {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-    }
-
-    .team-member:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-    }
-
-    .team-member-header {
-        height: 180px;
-        background: linear-gradient(135deg, #ef4444 0%, #c92a2a 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 60px;
-    }
-
-    .team-member-info {
-        padding: 20px;
-        text-align: center;
-    }
-
-    .team-member-name {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1e293b;
-        margin: 0 0 5px 0;
-    }
-
-    .team-member-role {
-        font-size: 14px;
-        color: #ef4444;
-        margin: 0;
-    }
-
     .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 40px;
         font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Bag-ong Style para sa Contact Section */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-top: 40px;
+    }
+    
+    .contact-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .contact-card:hover {
+        border-color: #fecaca;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .contact-icon {
+        font-size: 32px;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .contact-info {
+        color: #1e293b;
+        font-weight: 700;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .contact-label {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .social-link {
+        color: #ef4444;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
     }
 </style>
 
@@ -292,21 +300,36 @@
                 <h3>Community Driven</h3>
                 <p>We're built by donors, for donors. Your feedback shapes our platform and our mission.</p>
             </div>
-            <div class="mission-card">
-                <span class="mission-card-icon">📱</span>
-                <h3>Easy to Use</h3>
-                <p>Intuitive design makes donating blood and requesting units as simple as a few clicks.</p>
+        </div>
+    </div>
+
+    <!-- Contact Us Section (BAG-O) -->
+    <div class="content-section">
+        <h2 class="section-title">Get In Touch</h2>
+        <p class="description-text">Have questions or need assistance? Our team is here to help you 24/7.</p>
+        
+        <div class="contact-grid">
+            <div class="contact-card">
+                <span class="contact-icon">📧</span>
+                <div class="contact-info">support@lifeflow.ph</div>
+                <div class="contact-label">Official Email</div>
             </div>
-            <div class="mission-card">
-                <span class="mission-card-icon">🏥</span>
-                <h3>Hospital Certified</h3>
-                <p>Trusted by hospitals and medical facilities across the region for reliability and accuracy.</p>
+            <div class="contact-card">
+                <span class="contact-icon">📞</span>
+                <div class="contact-info">+63 912 345 6789</div>
+                <div class="contact-label">Hotline Number</div>
             </div>
-            <div class="mission-card">
-                <span class="mission-card-icon">📊</span>
-                <h3>Transparent Tracking</h3>
-                <p>Monitor your donations and see the real impact you're making on the lives you've saved.</p>
+            <div class="contact-card">
+                <span class="contact-icon">📍</span>
+                <div class="contact-info">Davao City, PH</div>
+                <div class="contact-label">Headquarters</div>
             </div>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-link">Facebook</a>
+            <a href="#" class="social-link">Instagram</a>
+            <a href="#" class="social-link">Twitter</a>
         </div>
     </div>
 

@@ -6,28 +6,89 @@ use App\Models\User;
 use App\Models\Donation;
 use App\Models\BloodRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function inventory()
+    public function index()
     {
+        // 1. Fetch Blood Inventory Data
         $types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
         $inventory = [];
 
         foreach ($types as $type) {
-            $totalDonated = Donation::where('blood_type', $type)->sum('units');
-            $totalRequested = BloodRequest::where('blood_type', $type)
-                ->where('status', 'approved')
+            $totalDonated = Donation::where('blood_type', trim($type))
+                ->whereIn('status', ['approved', 'completed', 'Approved', 'Completed'])
                 ->sum('units');
+
+            $totalRequested = BloodRequest::where('blood_type', trim($type))
+                ->whereIn('status', ['approved', 'Approved'])
+                ->sum('units');
+
+            $currentStock = $totalDonated - $totalRequested;
 
             $inventory[] = (object)[
                 'type' => $type,
-                'stock' => $totalDonated - $totalRequested,
-                'status' => ($totalDonated - $totalRequested) < 2000 ? 'Low' : 'Stable'
+                'stock' => $currentStock,
+                'status' => $currentStock < 2000 ? 'Low' : 'Stable'
             ];
         }
 
-        return view('admin.inventory', compact('inventory'));
+        // 2. Fetch Incoming Blood REQUESTS (Pending Only)
+        $requests = BloodRequest::with('user')
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
+        // 3. Fetch Processed Blood REQUESTS (History)
+        $processedRequests = BloodRequest::with('user')
+            ->whereIn('status', ['approved', 'rejected'])
+            ->latest()
+            ->take(10)
+            ->get();
+
+        // 4. UPDATED: Fetch Recent DONATIONS (Automatic hide after 3 days)
+        // Only shows donations created within the last 72 hours.
+        $recentDonations = Donation::with('user')
+            ->whereIn('status', ['approved', 'completed', 'Approved', 'Completed'])
+            ->where('created_at', '>=', now()->subDays(3)) 
+            ->latest()
+            ->get();
+
+        // 5. Fetch Registered Users
+        $donors = User::where('role', 'user')
+            ->latest()
+            ->take(8) 
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'inventory', 
+            'requests', 
+            'processedRequests', 
+            'recentDonations', 
+            'donors'
+        ));
+    }
+
+    public function approveRequest($id)
+    {
+        $request = BloodRequest::findOrFail($id);
+        $request->update(['status' => 'approved']);
+        return back()->with('success', 'Blood request approved successfully!');
+    }
+
+    public function rejectRequest($id)
+    {
+        $request = BloodRequest::findOrFail($id);
+        $request->update(['status' => 'rejected']);
+        return back()->with('error', 'Blood request has been rejected.');
+    }
+
+    public function donors()
+    {
+        $donors = User::where('role', 'user')->latest()->get();
+        return view('donor-records', compact('donors'));
     }
 
     public function users()
@@ -40,7 +101,6 @@ class AdminController extends Controller
     {
         $donations = Donation::with('user')->latest()->get();
         $requests = BloodRequest::with('user')->latest()->get();
-
         return view('admin.reports', compact('donations', 'requests'));
     }
 }

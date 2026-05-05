@@ -1,6 +1,26 @@
 <x-layout>
     <div style="max-width: 1200px; margin: 0 auto; font-family: 'DM Sans', sans-serif;">
         
+        {{-- SUCCESS NOTIFICATION --}}
+        @if(session('success'))
+            <div style="background-color: #ecfdf5; border-left: 5px solid #10b981; padding: 16px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; align-items: center; animation: slideDown 0.5s ease-out;">
+                <div style="background-color: #10b981; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; flex-shrink: 0;">
+                    ✓
+                </div>
+                <div>
+                    <p style="color: #065f46; font-weight: 800; margin: 0; font-size: 14px;">Donate Success!</p>
+                    <p style="color: #047857; margin: 0; font-size: 13px;">{{ session('success') }}</p>
+                </div>
+            </div>
+
+            <style>
+                @keyframes slideDown {
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            </style>
+        @endif
+
         <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
             <div>
                 <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome back, {{ auth()->user()->name }} 👋</h1>
@@ -101,7 +121,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 24px;">
                 @foreach($announcements as $ann)
-                <div style="background: {{ $ann->tag == 'urgent' ? 'var(--red)' : '#0A0A0A' }}; padding: 24px; border-radius: 24px; color: white; position: relative; overflow: hidden;">
+                <div style="background: {{ $ann->tag == 'urgent' ? '#C0392B' : '#0A0A0A' }}; padding: 24px; border-radius: 24px; color: white; position: relative; overflow: hidden;">
                     <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">{{ $ann->tag }} • {{ $ann->date }}</div>
                     <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">{{ $ann->title }}</h4>
                     <p style="font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.8);">{{ $ann->body }}</p>

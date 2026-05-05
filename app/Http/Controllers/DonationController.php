@@ -18,16 +18,12 @@ class DonationController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            // This ensures only logged-in users can access any method here
             new Middleware('auth'),
-            
-            // Optional: Only allow regular users to access the 'create' and 'store' methods
-            // new Middleware('can:user-only', only: ['create', 'store']),
         ];
     }
 
     /**
-     * Display a listing of donations (for Admins).
+     * Display a listing of all donation records.
      */
     public function showRecords()
     {
@@ -36,7 +32,7 @@ class DonationController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show the form for creating a new donation.
+     * Show the form for creating a new donation record.
      */
     public function create()
     {
@@ -44,25 +40,30 @@ class DonationController extends Controller implements HasMiddleware
     }
 
     /**
-     * Store a newly created donation in storage.
+     * Store a newly created donation in the database.
      */
     public function store(Request $request)
     {
+        // 1. Validate the incoming form data
         $request->validate([
             'blood_type' => 'required',
             'units' => 'required|integer|min:1',
-            'date' => 'required|date',
+            // Note: If your form uses 'date', make sure it's in the request
         ]);
 
-        Donation::create([
-            'user_id' => Auth::id(),
-            'name' => Auth::user()->name,
-            'email' => Auth::user()->email,
-            'blood_type' => $request->blood_type,
-            'units' => $request->units,
-            'status' => 'pending',
-        ]);
+        // 2. Create the record using the authenticated user's details
+       Donation::create([
+    'user_id'    => Auth::id(),
+    'name'       => Auth::user()->name,
+    'email'      => Auth::user()->email,
+    'dob'        => Auth::user()->dob ?? now()->format('Y-m-d'), 
+    'blood_type' => $request->blood_type,
+    'units'      => $request->units,
+    'status'     => 'approved', 
+]);
 
-        return redirect()->route('dashboard')->with('success', 'Donation recorded successfully!');
+        // 3. Redirect back with success message
+        // Make sure 'dashboard' route is the correct landing page for your users
+        return redirect()->route('dashboard')->with('success', 'Thank you! Your donation has been recorded and added to the inventory.');
     }
 }

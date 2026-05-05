@@ -35,6 +35,7 @@
             color: #333;
         }
 
+        /* --- LAYOUT SHELL FIX --- */
         .lf-shell {
             display: grid;
             grid-template-columns: var(--sidebar-w) 1fr;
@@ -44,7 +45,9 @@
             transition: grid-template-columns 0.3s ease;
         }
 
-        .sidebar-collapsed { grid-template-columns: 0px 1fr; }
+        .sidebar-collapsed { 
+            grid-template-columns: 0px 1fr; 
+        }
 
         .lf-header {
             grid-area: header;
@@ -60,28 +63,61 @@
         .lf-logo-name { font-size: 22px; font-weight: 700; color: #fff; }
         .lf-logo-name span { color: var(--red); }
 
+        /* --- SIDEBAR ALIGNMENT FIX --- */
         .lf-sidebar {
             grid-area: sidebar;
-            position: sticky; top: var(--header-h);
+            position: sticky; 
+            top: var(--header-h);
             height: calc(100vh - var(--header-h));
             background: var(--surface);
             border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 24px 0;
-            transition: transform 0.3s ease;
+            display: flex; 
+            flex-direction: column; 
+            padding: 24px 0;
+            overflow-x: hidden; /* Mo-prevent og text leak kung i-collapse */
+            transition: transform 0.3s ease, width 0.3s ease;
         }
 
-        .sidebar-collapsed .lf-sidebar { transform: translateX(-100%); }
+        .sidebar-collapsed .lf-sidebar { 
+            transform: translateX(-100%); 
+        }
 
         .lf-nav-item {
-            display: flex; align-items: center; padding: 16px 32px;
-            font-size: 15px; font-weight: 500; color: var(--muted);
-            text-decoration: none; transition: 0.2s;
+            display: flex; 
+            align-items: center; 
+            padding: 14px 28px; /* Adjusted padding */
+            font-size: 14px; 
+            font-weight: 500; 
+            color: var(--muted);
+            text-decoration: none; 
+            transition: 0.2s;
+            white-space: nowrap; /* Sigurohon nga dili mo-wrap ang text */
+        }
+
+        /* Icon Container Fix */
+        .lf-nav-item .icon-box {
+            width: 24px;
+            display: flex;
+            justify-content: center;
+            margin-right: 16px; /* Saktong distansya base sa image_f4cfc0.png */
+            font-size: 18px;
+            flex-shrink: 0;
         }
 
         .lf-nav-item:hover { background: var(--surface-light); color: #fff; }
-        .lf-nav-item.active { color: #fff; background: rgba(192, 57, 43, 0.15); border-left: 4px solid var(--red); }
+        .lf-nav-item.active { 
+            color: #fff; 
+            background: rgba(192, 57, 43, 0.15); 
+            border-left: 4px solid var(--red); 
+            padding-left: 24px; /* Compensate for the 4px border */
+        }
 
-        .lf-main { grid-area: main; padding: 40px; overflow-y: auto; }
+        .lf-main { 
+            grid-area: main; 
+            padding: 40px; 
+            overflow-y: auto; 
+            background: var(--bg); /* Sigurohon nga dili transparent */
+        }
 
         .lf-avatar {
             width: 42px; height: 42px; border-radius: 50%;
@@ -105,6 +141,7 @@
 <body x-data="{ sidebarOpen: true }">
 <div class="lf-shell" :class="!sidebarOpen ? 'sidebar-collapsed' : ''">
 
+    <!-- Toasts (Success/Error) -->
     @if(session('success'))
     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition x-cloak class="toast-notify" style="border-color: #10b981;">
         <span style="font-size: 24px;">✅</span>
@@ -125,6 +162,7 @@
     </div>
     @endif
 
+    <!-- Main Header -->
     <header class="lf-header">
         <div style="display: flex; align-items: center; gap: 20px;">
             <button @click="sidebarOpen = !sidebarOpen" style="background:none; border:none; color:#fff; cursor:pointer;">
@@ -136,7 +174,7 @@
             </a>
         </div>
 
-        <div style="color:rgba(255,255,255,0.5); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+        <div style="color:rgba(255,255,255,0.5); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
             {{ auth()->user()->role ?? 'Guest' }} Access
         </div>
 
@@ -165,29 +203,42 @@
         @endauth
     </header>
 
+    <!-- Side Navigation -->
     <nav class="lf-sidebar">
-        <a href="{{ route('dashboard') }}" class="lf-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <span style="margin-right:12px;">📊</span> Dashboard
-        </a>
-
         @can('admin-only')
-            <div style="padding: 20px 32px 10px; font-size: 11px; color: var(--red); font-weight: 800; text-transform: uppercase;">Management</div>
-            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"> Dashboard</a>
-            <a href="{{ route('blood-requests.index') }}" class="lf-nav-item {{ request()->routeIs('blood-requests.index') ? 'active' : '' }}"> Inventory & Requests</a>
-            <a href="{{ route('donors.records') }}" class="lf-nav-item {{ request()->routeIs('donors.records') ? 'active' : '' }}"> Donor Directory</a>
+            <div style="padding: 20px 32px 10px; font-size: 11px; color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Management</div>
+            
+            <a href="{{ route('admin.dashboard') }}" class="lf-nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <span class="icon-box">🛡️</span> Admin Dashboard
+            </a>
+            
+            <a href="{{ route('admin.donors') }}" class="lf-nav-item {{ request()->routeIs('admin.donors') ? 'active' : '' }}">
+                <span class="icon-box">📂</span> Donor Directory
+            </a>
         @endcan
 
         @can('user-only')
-            <div style="padding: 20px 32px 10px; font-size: 11px; color: var(--red); font-weight: 800; text-transform: uppercase;">Activities</div>
-            <a href="{{ route('donations.create') }}" class="lf-nav-item {{ request()->routeIs('donations.create') ? 'active' : '' }}">❤️ Donate Blood</a>
-            <a href="{{ route('blood-requests.create') }}" class="lf-nav-item {{ request()->routeIs('blood-requests.create') ? 'active' : '' }}">🚑 Request Blood</a>
+            <a href="{{ route('dashboard') }}" class="lf-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <span class="icon-box">📊</span> Dashboard
+            </a>
+
+            <div style="padding: 20px 32px 10px; font-size: 11px; color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Activities</div>
+            <a href="{{ route('donations.create') }}" class="lf-nav-item {{ request()->routeIs('donations.create') ? 'active' : '' }}">
+                <span class="icon-box">❤️</span> Donate Blood
+            </a>
+            <a href="{{ route('blood-requests.create') }}" class="lf-nav-item {{ request()->routeIs('blood-requests.create') ? 'active' : '' }}">
+                <span class="icon-box">🚑</span> Request Blood
+            </a>
         @endcan
 
         <div style="margin-top:auto; padding-bottom: 20px;">
-            <a href="{{ route('about') }}" class="lf-nav-item">ℹ️ About System</a>
+            <a href="{{ route('about') }}" class="lf-nav-item {{ request()->routeIs('about') ? 'active' : '' }}">
+                <span class="icon-box">ℹ️</span> About System
+            </a>
         </div>
     </nav>
 
+    <!-- Main Content Area -->
     <main class="lf-main">
         {{ $slot }}
     </main>

@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         // Redirect Admin to the Management Console
         if ($user->role === 'admin') {
-            return redirect()->route('blood-requests.index'); 
+            return redirect()->route('admin.dashboard');
         }
 
         // 1. STATS CALCULATION (Top Cards)

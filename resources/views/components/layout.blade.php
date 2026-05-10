@@ -211,6 +211,10 @@
             <a href="{{ route('admin.dashboard') }}" class="lf-nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <span class="icon-box">🛡️</span> Admin Dashboard
             </a>
+
+            <a href="{{ route('blood-requests.index') }}" class="lf-nav-item {{ request()->routeIs('blood-requests.index') ? 'active' : '' }}">
+                <span class="icon-box">🩸</span> Blood Requests
+            </a>
             
             <a href="{{ route('admin.donors') }}" class="lf-nav-item {{ request()->routeIs('admin.donors') ? 'active' : '' }}">
                 <span class="icon-box">📂</span> Donor Directory

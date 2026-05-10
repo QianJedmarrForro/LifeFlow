@@ -52,6 +52,11 @@ Route::middleware('auth')->group(function () {
     // --- ADMIN ONLY ROUTES ---
     Route::middleware('can:admin-only')->group(function () {
         
+        // Admin home route defaults to dashboard
+        Route::get('/admin', function () {
+            return redirect()->route('admin.dashboard');
+        })->name('admin.home');
+
         // Admin Dashboard: Overview of Blood Inventory and Active Requests
         Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         

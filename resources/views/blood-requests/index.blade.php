@@ -75,7 +75,9 @@
                     <th>Blood Type</th>
                     <th>Req. Volume</th>
                     <th>Hospital</th>
+                    <th>Requested On</th>
                     <th>Status</th>
+                    <th>Action Date</th>
                     <th>Management</th>
                 </tr>
             </thead>
@@ -89,7 +91,19 @@
                     <td><strong style="color: #ef4444; font-size: 16px;">{{ $req->blood_type }}</strong></td>
                     <td>{{ $req->units }}ml</td>
                     <td style="color: #64748b;">{{ $req->hospital }}</td>
+                    <td>
+                        <div style="font-weight: 700; color: #1e293b;">{{ \Carbon\Carbon::parse($req->created_at)->format('M d, Y') }}</div>
+                        <div style="font-size: 11px; color: #94a3b8;">{{ \Carbon\Carbon::parse($req->created_at)->format('h:i A') }}</div>
+                    </td>
                     <td><span class="status-badge status-{{ $req->status }}">{{ $req->status }}</span></td>
+                    <td>
+                        @if($req->status !== 'pending')
+                            <div style="font-weight: 700; color: {{ $req->status === 'approved' ? '#16a34a' : '#991b1b' }};">{{ \Carbon\Carbon::parse($req->updated_at)->format('M d, Y') }}</div>
+                            <div style="font-size: 11px; color: #94a3b8;">{{ \Carbon\Carbon::parse($req->updated_at)->format('h:i A') }}</div>
+                        @else
+                            <span style="color: #94a3b8; font-size: 12px;">Pending</span>
+                        @endif
+                    </td>
                     <td>
                         @if($req->status == 'pending')
                             <div style="display: flex; gap: 8px;">

@@ -1,10 +1,7 @@
 <x-layout>
     <style>
         .reward-toast {
-            position: fixed;
-            top: 90px;
-            right: 24px;
-            z-index: 9999;
+            position: relative;
             background: #ffffff;
             border: 1px solid rgba(229, 231, 235, 0.9);
             border-radius: 18px;
@@ -14,7 +11,7 @@
             align-items: center;
             gap: 14px;
             opacity: 0;
-            transform: translateY(-20px) scale(0.96);
+            transform: translateY(-10px) scale(0.98);
             transition: transform 0.25s ease, opacity 0.25s ease;
         }
         .reward-toast.show {
@@ -166,13 +163,15 @@
         @endif
 
         @if(session('reward'))
-            <div id="reward-toast" class="reward-toast">
-                <div class="reward-bag">🩸</div>
-                <div>
-                    <h4>You gained one point!</h4>
-                    <p>Your donation was recorded. Keep going to unlock more rewards.</p>
+            @push('toasts')
+                <div id="reward-toast" class="reward-toast toast-notify" style="border-color: #f97316;">
+                    <span style="font-size: 24px;">🎉</span>
+                    <div>
+                        <h4 style="margin: 0 0 4px; font-size: 14px; color: #111827; font-weight: 800;">Reward Earned</h4>
+                        <p style="margin: 0; color: #4b5563; font-size: 13px;">You gained one point! Your donation was recorded. Keep going to unlock more rewards.</p>
+                    </div>
                 </div>
-            </div>
+            @endpush
         @endif
 
         <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">

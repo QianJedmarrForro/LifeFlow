@@ -1,183 +1,196 @@
 <x-layout>
 <style>
-    * { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    * { transition: all 0.18s ease-in-out; box-sizing: border-box; }
 
     .blood-req-container {
         font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         padding: 40px;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         min-height: 100vh;
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+        color: #0f172a;
     }
 
-    /* ===== HERO HEADER ===== */
-    .hero-header {
-        margin-bottom: 50px;
-        position: relative;
-        overflow: hidden;
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: flex-start;
+        margin-bottom: 30px;
     }
 
-    .hero-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 500px;
-        height: 500px;
-        background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%);
-        border-radius: 50%;
-        pointer-events: none;
+    .hero-copy {
+        max-width: 640px;
     }
 
     .hero-title {
-        font-size: 48px;
+        font-size: 42px;
         font-weight: 900;
-        background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
         margin: 0;
-        position: relative;
-        z-index: 1;
-        letter-spacing: -1px;
+        line-height: 1.05;
+        letter-spacing: -0.6px;
+        color: #0f172a;
     }
 
     .hero-subtitle {
-        color: #94a3b8;
+        margin-top: 16px;
+        color: #475569;
         font-size: 15px;
-        margin-top: 12px;
-        position: relative;
-        z-index: 1;
-        font-weight: 500;
+        line-height: 1.75;
     }
 
-    /* ===== METRIC CARDS ===== */
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #3b82f6;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 14px;
+        box-shadow: 0 18px 40px rgba(59, 130, 246, 0.18);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(15, 23, 42, 0.06);
+        color: #0f172a;
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
     .metrics-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-        margin-bottom: 50px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin-bottom: 36px;
     }
 
     .metric-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 28px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 22px;
+        padding: 28px 24px;
+        box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
         position: relative;
         overflow: hidden;
-        cursor: pointer;
     }
 
-    .metric-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        pointer-events: none;
+    .metric-card.pending {
+        border-left: 4px solid #f59e0b;
     }
 
-    .metric-card.pending::before {
-        background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+    .metric-card.approved {
+        border-left: 4px solid #10b981;
     }
 
-    .metric-card.approved::before {
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-    }
-
-    .metric-card.rejected::before {
-        background: radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, transparent 70%);
-    }
-
-    .metric-card:hover {
-        border-color: rgba(255, 255, 255, 0.2);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
-        transform: translateY(-8px);
+    .metric-card.rejected {
+        border-left: 4px solid #ef4444;
     }
 
     .metric-icon {
         font-size: 32px;
-        margin-bottom: 16px;
-        position: relative;
-        z-index: 1;
+        margin-bottom: 14px;
     }
 
     .metric-label {
         font-size: 12px;
         font-weight: 700;
         text-transform: uppercase;
-        color: #94a3b8;
-        letter-spacing: 1.2px;
-        margin-bottom: 12px;
-        position: relative;
-        z-index: 1;
+        letter-spacing: 1px;
+        color: #475569;
+        margin-bottom: 10px;
     }
 
     .metric-value {
-        font-size: 42px;
+        font-size: 36px;
         font-weight: 900;
-        color: #ffffff;
-        position: relative;
-        z-index: 1;
+        color: #111827;
         line-height: 1;
     }
 
-    /* ===== MAIN CARD ===== */
-    .requests-container {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%);
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.5);
+    .metric-note {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #64748b;
     }
 
-    .requests-header {
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        padding: 40px;
+    .requests-panels {
+        display: grid;
+        grid-template-columns: 1.9fr 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .requests-main,
+    .summary-card,
+    .urgent-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        box-shadow: 0 24px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .requests-main {
+        overflow: hidden;
+    }
+
+    .requests-main header {
+        padding: 28px 32px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 16px;
+        border-bottom: 1px solid #f1f5f9;
     }
 
     .requests-title {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: 900;
-        color: #ffffff;
         margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        color: #111827;
     }
 
     .filter-group {
         display: flex;
         gap: 12px;
+        flex-wrap: wrap;
         align-items: center;
     }
 
     .status-filter {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #ffffff;
-        padding: 10px 18px;
-        border-radius: 12px;
+        min-width: 170px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        color: #0f172a;
+        padding: 12px 16px;
         font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        font-family: inherit;
+        font-weight: 700;
+        outline: none;
     }
 
-    .status-filter:hover {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.3);
+    .clear-filter {
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 14px;
+        padding: 12px 16px;
+        text-decoration: none;
+        font-weight: 700;
     }
 
-    /* ===== REQUESTS TABLE ===== */
     .requests-table-wrapper {
         overflow-x: auto;
     }
@@ -185,12 +198,11 @@
     .requests-table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 1200px;
+        min-width: 1400px;
     }
 
-    .requests-table thead tr {
+    .requests-table thead {
         background: #f8fafc;
-        border-bottom: 2px solid #e2e8f0;
     }
 
     .requests-table thead th {
@@ -201,519 +213,569 @@
         text-transform: uppercase;
         color: #64748b;
         letter-spacing: 1px;
-    }
-
-    .requests-table tbody tr {
         border-bottom: 1px solid #e2e8f0;
     }
 
-    .requests-table tbody tr:hover {
-        background: #f1f5f9;
+    .requests-table tbody tr {
+        transition: background 0.2s ease;
     }
 
-    .requests-table tbody tr:last-child {
-        border-bottom: none;
+    .requests-table tbody tr:hover {
+        background: #f5f8ff;
     }
 
     .requests-table td {
         padding: 16px;
         color: #475569;
         font-size: 13px;
+        vertical-align: middle;
     }
 
-    /* ===== REQUEST ROW CONTENT ===== */
     .patient-card {
-        display: flex;
-        flex-direction: column;
+        display: grid;
         gap: 6px;
     }
 
     .patient-name {
         font-weight: 800;
-        color: #1e293b;
+        color: #111827;
         font-size: 14px;
     }
 
     .patient-meta {
-        font-size: 11px;
-        color: #94a3b8;
         display: flex;
-        gap: 12px;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 12px;
+        color: #64748b;
     }
 
     .blood-badge {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 60px;
-        height: 60px;
+        width: 62px;
+        height: 62px;
+        border-radius: 18px;
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
         font-weight: 900;
         font-size: 16px;
-        border-radius: 14px;
-        box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+        box-shadow: 0 20px 35px rgba(239, 68, 68, 0.24);
+        margin: auto;
     }
 
-    .medical-info {
-        background: #f0f9ff;
-        border: 1px solid #7dd3fc;
-        border-radius: 10px;
-        padding: 10px 12px;
-        font-size: 12px;
-        color: #0369a1;
-        font-weight: 600;
-    }
-
-    .inventory-status {
+    .info-row {
         display: flex;
         flex-direction: column;
         gap: 4px;
     }
 
-    .inventory-bar {
-        width: 120px;
-        height: 6px;
-        background: #f1f5f9;
-        border-radius: 10px;
-        overflow: hidden;
+    .info-value {
+        font-weight: 700;
+        color: #111827;
     }
 
-    .inventory-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #10b981 0%, #6ee7b7 100%);
-    }
-
-    .inventory-text {
+    .info-label {
         font-size: 11px;
-        color: #64748b;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
     }
 
-    .doctor-auth {
-        background: #fef3c7;
-        border: 1px solid #fcd34d;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-size: 11px;
-        color: #78350f;
-        font-weight: 600;
+    .medical-info {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 14px 16px;
+        color: #334155;
+        font-size: 13px;
+        line-height: 1.6;
     }
 
-    .urgency-critical {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        border: 2px solid #ef4444;
-        animation: critical-pulse 1.5s infinite;
-    }
-
-    .urgency-high {
-        background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%);
-        border: 1px solid #fcd34d;
-    }
-
-    @keyframes critical-pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
-
-    .deadline-badge {
+    .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 8px 12px;
-        border-radius: 10px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    /* ===== STATUS BADGES ===== */
-    .status-badge {
-        display: inline-block;
-        padding: 8px 16px;
-        border-radius: 12px;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 999px;
         font-size: 12px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.7px;
         white-space: nowrap;
     }
 
     .badge-pending {
-        background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%);
-        color: #854d0e;
-        border: 1px solid #fef08a;
-        animation: pulse-pending 2s infinite;
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fcd34d;
     }
 
     .badge-approved {
-        background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+        background: #dcfce7;
         color: #166534;
         border: 1px solid #bbf7d0;
     }
 
     .badge-rejected {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        background: #fee2e2;
         color: #991b1b;
         border: 1px solid #fecaca;
     }
 
-    @keyframes pulse-pending {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
-
-    /* ===== ACTION BUTTONS ===== */
     .action-group {
         display: flex;
         gap: 8px;
-        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .btn-modern {
         padding: 10px 14px;
         border: none;
-        border-radius: 10px;
+        border-radius: 14px;
         font-weight: 700;
         font-size: 12px;
         cursor: pointer;
-        text-decoration: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
         white-space: nowrap;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
     }
 
     .btn-approve {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: #22c55e;
         color: white;
-    }
-
-    .btn-approve:hover {
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        transform: translateY(-2px);
     }
 
     .btn-reject {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: #ef4444;
         color: white;
     }
 
-    .btn-reject:hover {
-        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-        transform: translateY(-2px);
+    .btn-modern:hover {
+        transform: translateY(-1px);
+        opacity: 0.98;
     }
 
     .status-locked {
         padding: 10px 14px;
         background: #f1f5f9;
-        color: #94a3b8;
-        border-radius: 10px;
+        color: #64748b;
+        border-radius: 14px;
         font-size: 12px;
         font-weight: 700;
         text-transform: uppercase;
     }
 
-    /* ===== EMPTY STATE ===== */
+    .summary-card,
+    .urgent-card {
+        padding: 26px;
+    }
+
+    .summary-card h3,
+    .urgent-card h3 {
+        margin: 0 0 18px;
+        font-size: 18px;
+        font-weight: 900;
+        color: #111827;
+    }
+
+    .overview-rows {
+        display: grid;
+        gap: 18px;
+    }
+
+    .stat-block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 18px;
+        border-radius: 18px;
+        background: #f8fafc;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .stat-value {
+        font-size: 22px;
+        font-weight: 900;
+        color: #111827;
+    }
+
+    .stat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #eff6ff;
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #2563eb;
+    }
+
+    .urgent-card {
+        border: 1px solid #fecaca;
+        background: #fffbeb;
+    }
+
+    .urgent-card p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #7c2d12;
+    }
+
     .empty-state {
         padding: 80px 40px;
         text-align: center;
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.02) 0%, rgba(30, 41, 59, 0.02) 100%);
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
     }
 
     .empty-icon {
         font-size: 64px;
         margin-bottom: 24px;
-        opacity: 0.6;
+        color: #64748b;
     }
 
     .empty-title {
         font-size: 24px;
         font-weight: 800;
-        color: #1e293b;
+        color: #111827;
         margin-bottom: 10px;
     }
 
     .empty-text {
         color: #64748b;
         font-size: 15px;
+        line-height: 1.7;
     }
 
-    .info-row {
-        display: flex;
-        gap: 4px;
-        flex-direction: column;
-    }
-
-    .info-label {
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #94a3b8;
-        letter-spacing: 0.5px;
-    }
-
-    .info-value {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1e293b;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1024px) {
-        .requests-table {
-            min-width: 1000px;
+    @media (max-width: 1080px) {
+        .requests-panels {
+            grid-template-columns: 1fr;
         }
 
-        .requests-table td {
-            padding: 14px 12px;
-            font-size: 12px;
+        .section-header,
+        .requests-main header {
+            flex-direction: column;
+            align-items: flex-start;
         }
     }
 
     @media (max-width: 768px) {
         .blood-req-container {
-            padding: 20px;
+            padding: 24px;
         }
 
         .hero-title {
             font-size: 32px;
         }
 
+        .hero-actions {
+            width: 100%;
+        }
+
         .metrics-grid {
             grid-template-columns: 1fr;
-            gap: 16px;
         }
 
-        .requests-header {
-            padding: 24px;
-            flex-direction: column;
-            align-items: flex-start;
+        .requests-main header {
+            padding: 22px;
         }
 
-        .requests-title {
-            font-size: 20px;
-        }
-
-        .requests-table {
-            font-size: 11px;
-        }
-
-        .requests-table th,
+        .requests-table thead th,
         .requests-table td {
-            padding: 10px 8px;
+            padding: 12px 10px;
         }
 
         .blood-badge {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             font-size: 14px;
         }
 
-        .action-group {
-            flex-direction: row;
-        }
-
         .btn-modern {
-            width: 48px;
-            padding: 8px 10px;
-            font-size: 10px;
+            width: 100%;
         }
 
-        .inventory-bar {
-            width: 80px;
+        .summary-card,
+        .urgent-card {
+            padding: 22px;
         }
     }
 </style>
 
 <div class="blood-req-container">
-    <!-- Hero Header -->
-    <div class="hero-header">
-        <h1 class="hero-title">🩸 Blood Bank Requests</h1>
-        <p class="hero-subtitle">Real-time request management · Medical authorization · Inventory tracking</p>
+    <div class="section-header">
+        <div class="hero-copy">
+            <h1 class="hero-title">Blood Requests Center</h1>
+            <p class="hero-subtitle">A clean new admin experience for processing requests, tracking urgency, and keeping blood inventory aligned with patient need.</p>
+        </div>
+        <div class="hero-actions">
+            <a href="{{ route('blood-requests.index') }}" class="btn-secondary">Refresh</a>
+        </div>
     </div>
 
-    <!-- Metrics Grid -->
     <div class="metrics-grid">
         <div class="metric-card pending">
             <div class="metric-icon">⏳</div>
-            <div class="metric-label">Pending</div>
+            <div class="metric-label">Pending Requests</div>
             <div class="metric-value">
-                @php
-                    $pendingCount = \App\Models\BloodRequest::where('status', 'pending')->count();
-                @endphp
+                @php $pendingCount = \App\Models\BloodRequest::where('status', 'pending')->count(); @endphp
                 {{ $pendingCount }}
             </div>
+            <div class="metric-note">Waiting for approval.</div>
         </div>
 
         <div class="metric-card approved">
             <div class="metric-icon">✅</div>
             <div class="metric-label">Approved</div>
             <div class="metric-value">
-                @php
-                    $approvedCount = \App\Models\BloodRequest::where('status', 'approved')->count();
-                @endphp
+                @php $approvedCount = \App\Models\BloodRequest::where('status', 'approved')->count(); @endphp
                 {{ $approvedCount }}
             </div>
+            <div class="metric-note">Allocated to patients.</div>
         </div>
 
         <div class="metric-card rejected">
             <div class="metric-icon">❌</div>
             <div class="metric-label">Rejected</div>
             <div class="metric-value">
-                @php
-                    $rejectedCount = \App\Models\BloodRequest::where('status', 'rejected')->count();
-                @endphp
+                @php $rejectedCount = \App\Models\BloodRequest::where('status', 'rejected')->count(); @endphp
                 {{ $rejectedCount }}
             </div>
+            <div class="metric-note">Flagged for review.</div>
         </div>
     </div>
 
-    <!-- Main Requests Container -->
-    <div class="requests-container">
-        <!-- Header -->
-        <div class="requests-header">
-            <h2 class="requests-title">📋 Blood Requests Registry</h2>
-            <div class="filter-group">
-                <form method="GET" style="display: flex; gap: 8px;">
-                    <select name="filter" class="status-filter" onchange="this.form.submit()">
-                        <option value="">All Requests</option>
-                        <option value="pending" {{ request('filter') === 'pending' ? 'selected' : '' }}>⏳ Pending</option>
-                        <option value="approved" {{ request('filter') === 'approved' ? 'selected' : '' }}>✅ Approved</option>
-                        <option value="rejected" {{ request('filter') === 'rejected' ? 'selected' : '' }}>❌ Rejected</option>
-                    </select>
-                </form>
-                @if(request('filter'))
-                    <a href="{{ route('blood-requests.index') }}" style="color: #ef4444; font-size: 12px; font-weight: 700; text-decoration: none; padding: 10px 14px; background: #fee2e2; border-radius: 10px;">Clear</a>
-                @endif
+    <div class="requests-panels">
+        <div class="requests-main">
+            <header>
+                <h2 class="requests-title">Request Queue</h2>
+                <div class="filter-group">
+                    <form method="GET" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                        <select name="status" class="status-filter" onchange="this.form.submit()">
+                            <option value="">All Statuses</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>⏳ Pending</option>
+                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>✅ Approved</option>
+                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>❌ Rejected</option>
+                        </select>
+                        <select name="blood_type" class="status-filter" onchange="this.form.submit()">
+                            <option value="">All Blood Types</option>
+                            @foreach($bloodTypes as $bloodType)
+                                <option value="{{ $bloodType }}" {{ request('blood_type') === $bloodType ? 'selected' : '' }}>{{ $bloodType }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                    @if(request('filter'))
+                        <a href="{{ route('blood-requests.index') }}" class="clear-filter">Clear</a>
+                    @endif
+                </div>
+            </header>
+
+            <div class="requests-table-wrapper">
+                @forelse($requests as $req)
+                    @if($loop->first)
+                        <table class="requests-table">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th style="text-align:center;">Blood Type</th>
+                                    <th style="text-align:center;">Units</th>
+                                    <th>Hospital</th>
+                                    <th>Requested On</th>
+                                    <th>Needed By</th>
+                                    <th style="text-align:center;">Status</th>
+                                    <th>Action Date</th>
+                                    <th style="text-align:center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    @endif
+
+                    @php
+                        $donated = \App\Models\Donation::where('blood_type', $req->blood_type)
+                                    ->whereIn('status', ['approved', 'completed', 'Approved', 'Completed'])
+                                    ->sum('units');
+                        $taken = \App\Models\BloodRequest::where('blood_type', $req->blood_type)
+                                    ->where('status', 'approved')
+                                    ->sum('units');
+                        $available = max(0, $donated - $taken);
+                        $inventory_percentage = min(($available / max($req->units, 1)) * 100, 100);
+                        $daysLeft = \Carbon\Carbon::parse($req->needed_by)->diffInDays(now(), false);
+                        $isCritical = $daysLeft < 1;
+                        $isUrgent = $daysLeft < 3;
+                    @endphp
+
+                    <tr class="{{ $isCritical ? 'urgency-critical' : ($isUrgent ? 'urgency-high' : '') }}">
+                        <td>
+                            <div class="patient-card">
+                                <div class="patient-name">{{ $req->patient_name }}</div>
+                                <div class="patient-meta">
+                                    <span>{{ $req->patient_age ?? 'N/A' }} yrs</span>
+                                    <span>📞 {{ substr($req->contact_number ?? 'N/A', 0, 12) }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div class="blood-badge">{{ $req->blood_type }}</div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div class="info-row">
+                                <div class="info-value">{{ number_format($req->units) }} ml</div>
+                                <div class="info-label">Requested</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="info-row">
+                                <div class="info-value">{{ $req->hospital ?? 'Unknown' }}</div>
+                                <div class="info-label">{{ $req->department ?? 'Department' }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight:700; color: #0f172a;">
+                                {{ \Carbon\Carbon::parse($req->created_at)->format('M d, Y') }}
+                            </div>
+                            <div style="font-size: 12px; color: #64748b;">
+                                {{ \Carbon\Carbon::parse($req->created_at)->format('h:i A') }}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight:700; color: {{ $isCritical ? '#991b1b' : ($isUrgent ? '#92400e' : '#0f172a') }};">
+                                {{ \Carbon\Carbon::parse($req->needed_by)->format('M d, h:i A') }}
+                            </div>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="status-badge badge-{{ $req->status }}">
+                                {{ ucfirst($req->status) }}
+                            </span>
+                        </td>
+                        <td>
+                            @if($req->status !== 'pending')
+                                <div style="font-weight:700; color: {{ $req->status === 'approved' ? '#10b981' : '#ef4444' }};">
+                                    {{ \Carbon\Carbon::parse($req->updated_at)->format('M d, Y') }}
+                                </div>
+                                <div style="font-size: 12px; color: #64748b;">
+                                    {{ \Carbon\Carbon::parse($req->updated_at)->format('h:i A') }}
+                                </div>
+                            @else
+                                <div style="font-size: 12px; color: #94a3b8;">—</div>
+                            @endif
+                        </td>
+                        <td style="text-align:center;">
+                            <div class="action-group">
+                                @if($req->status === 'pending')
+                                    <form action="{{ route('blood-requests.approve', $req->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn-modern btn-approve" onclick="return confirm('Approve {{ $req->blood_type }} blood for {{ $req->patient_name }}?')" title="Approve">✓</button>
+                                    </form>
+                                    <form action="{{ route('blood-requests.reject', $req->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn-modern btn-reject" onclick="return confirm('Reject this request?')" title="Reject">✕</button>
+                                    </form>
+                                @else
+                                    <div class="status-locked">{{ ucfirst($req->status) }}</div>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+
+                    @if($loop->last)
+                            </tbody>
+                        </table>
+                    @endif
+                @empty
+                    <div class="empty-state">
+                        <div class="empty-icon">🩸</div>
+                        <div class="empty-title">No Blood Requests</div>
+                        <div class="empty-text">All current requests are processed. Great work!</div>
+                    </div>
+                @endforelse
             </div>
         </div>
 
-        <!-- Table -->
-        <div class="requests-table-wrapper">
-            @forelse($requests as $req)
-                @if($loop->first)
-                <table class="requests-table">
-                    <thead>
-                        <tr>
-                            <th>Patient</th>
-                            <th style="text-align: center;">Blood<br>Type</th>
-                            <th style="text-align: center;">Units<br>Requested</th>
-                            <th>Medical<br>Diagnosis</th>
-                            <th>Hospital<br>Department</th>
-                            <th style="text-align: center;">Inventory<br>Status</th>
-                            <th>Deadline</th>
-                            <th>Doctor<br>Auth</th>
-                            <th style="text-align: center;">Status</th>
-                            <th style="text-align: center;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                @endif
-
-                        @php
-                            // Calculate available inventory
-                            $donated = \App\Models\Donation::where('blood_type', $req->blood_type)
-                                        ->whereIn('status', ['approved', 'completed', 'Approved', 'Completed'])
-                                        ->sum('units');
-                            $taken = \App\Models\BloodRequest::where('blood_type', $req->blood_type)
-                                        ->where('status', 'approved')
-                                        ->sum('units');
-                            $available = max(0, $donated - $taken);
-                            $inventory_percentage = min(($available / max($req->units, 1)) * 100, 100);
-                            $daysLeft = \Carbon\Carbon::parse($req->needed_by)->diffInDays(now(), false);
-                            $isCritical = $daysLeft < 1;
-                            $isUrgent = $daysLeft < 3;
-                        @endphp
-
-                        <tr class="{{ $isCritical ? 'urgency-critical' : ($isUrgent ? 'urgency-high' : '') }}">
-                            <td>
-                                <div class="patient-card">
-                                    <div class="patient-name">{{ $req->patient_name }}</div>
-                                    <div class="patient-meta">
-                                        <span>{{ $req->patient_age ?? 'N/A' }} yrs</span>
-                                        <span>📞 {{ substr($req->contact_number ?? 'N/A', 0, 10) }}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="text-align: center;">
-                                <div class="blood-badge">{{ $req->blood_type }}</div>
-                            </td>
-                            <td style="text-align: center;">
-                                <div class="info-row">
-                                    <div class="info-value">{{ number_format($req->units) }}</div>
-                                    <div class="info-label">ml</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="medical-info">
-                                    {{ $req->medical_reason ?? 'Emergency transfusion' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="info-row">
-                                    <div class="info-value">{{ substr($req->hospital, 0, 16) }}</div>
-                                    <div class="info-label">{{ $req->department ?? 'ICU/ER' }}</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="inventory-status">
-                                    <div class="inventory-bar">
-                                        <div class="inventory-fill" style="width: {{ $inventory_percentage }}%;"></div>
-                                    </div>
-                                    <div class="inventory-text">{{ number_format($available) }} ml avail</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="deadline-badge {{ $isCritical ? 'urgency-critical' : ($isUrgent ? 'urgency-high' : '') }}" style="background: none; border: none; padding: 0; font-weight: 700;">
-                                    {{ \Carbon\Carbon::parse($req->needed_by)->format('M d, h:i A') }}
-                                    @if($isCritical)
-                                        <span style="color: #dc2626;">🚨</span>
-                                    @elseif($isUrgent)
-                                        <span style="color: #f59e0b;">⚠️</span>
-                                    @endif
-                                </div>
-                            </td>
-                            <td>
-                                <div class="doctor-auth">
-                                    ✓ {{ $req->doctor_name ?? 'Dr. Verified' }}
-                                </div>
-                            </td>
-                            <td style="text-align: center;">
-                                <span class="status-badge badge-{{ $req->status }}">
-                                    {{ ucfirst($req->status) }}
-                                </span>
-                            </td>
-                            <td style="text-align: center;">
-                                <div class="action-group">
-                                    @if($req->status === 'pending')
-                                        <form action="{{ route('blood-requests.approve', $req->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            <button type="submit" class="btn-modern btn-approve" onclick="return confirm('Approve {{ $req->blood_type }} blood for {{ $req->patient_name }}?')" title="Approve">✓</button>
-                                        </form>
-                                        <form action="{{ route('blood-requests.reject', $req->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            <button type="submit" class="btn-modern btn-reject" onclick="return confirm('Reject this request?')" title="Reject">✕</button>
-                                        </form>
-                                    @else
-                                        <div class="status-locked">{{ ucfirst($req->status) }}</div>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-
-                @if($loop->last)
-                    </tbody>
-                </table>
-                @endif
-            @empty
-                <div class="empty-state">
-                    <div class="empty-icon">🩸</div>
-                    <div class="empty-title">No Blood Requests</div>
-                    <div class="empty-text">All blood requests have been processed. Great work!</div>
+        <aside style="display:grid; gap:20px;">
+            <div class="summary-card">
+                <h3>Overview</h3>
+                @php
+                    $totalRequests = \App\Models\BloodRequest::count();
+                    $urgentCount = \App\Models\BloodRequest::where('needed_by', '<=', \Carbon\Carbon::now()->addDays(2))->count();
+                    $topType = \App\Models\BloodRequest::select('blood_type')->groupBy('blood_type')->orderByRaw('count(*) desc')->value('blood_type') ?? 'N/A';
+                @endphp
+                <div class="overview-rows">
+                    <div class="stat-block">
+                        <div>
+                            <div class="stat-label">Total Requests</div>
+                            <div class="stat-value">{{ $totalRequests }}</div>
+                        </div>
+                        <span class="stat-chip">Top Type: {{ $topType }}</span>
+                    </div>
+                    <div class="stat-block">
+                        <div>
+                            <div class="stat-label">Pending</div>
+                            <div class="stat-value">{{ $pendingCount }}</div>
+                        </div>
+                    </div>
+                    <div class="stat-block">
+                        <div>
+                            <div class="stat-label">Approved</div>
+                            <div class="stat-value">{{ $approvedCount }}</div>
+                        </div>
+                    </div>
+                    <div class="stat-block">
+                        <div>
+                            <div class="stat-label">Rejected</div>
+                            <div class="stat-value">{{ $rejectedCount }}</div>
+                        </div>
+                    </div>
                 </div>
-            @endforelse
-        </div>
+            </div>
+
+            <div class="summary-card">
+                <h3>Requests by Blood Type</h3>
+                @php
+                    $typeCounts = \App\Models\BloodRequest::select('blood_type')
+                        ->selectRaw('count(*) as total')
+                        ->groupBy('blood_type')
+                        ->orderByDesc('total')
+                        ->get();
+                @endphp
+                <div class="overview-rows">
+                    @foreach($typeCounts as $type)
+                        <div class="stat-block">
+                            <div>
+                                <div class="stat-label">{{ $type->blood_type }}</div>
+                                <div class="stat-value">{{ $type->total }}</div>
+                            </div>
+                            <span class="stat-chip">{{ strtoupper($type->blood_type) }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="urgent-card">
+                <h3>Urgent Alerts</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; padding:18px 20px; border-radius:18px; background:#fffbeb; border:1px solid #fecaca;">
+                    <div>
+                        <div style="font-size:16px; font-weight:800; color:#92400e;">{{ $urgentCount }} requests due soon</div>
+                        <p>Focus on orders needing transfusion within the next 48 hours.</p>
+                    </div>
+                    <div style="font-size:32px;">⚠️</div>
+                </div>
+            </div>
+        </aside>
     </div>
 </div>
 </x-layout>

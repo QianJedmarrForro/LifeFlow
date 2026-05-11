@@ -30,10 +30,23 @@ class BloodRequestController extends Controller
     public function index()
     {
         $donors = User::where('role', 'user')->get();
-        $requests = BloodRequest::latest()->get();
+        $statusFilter = request('status');
+        $bloodTypeFilter = request('blood_type');
+        $requestsQuery = BloodRequest::latest();
+        $bloodTypes = array_keys($this->compatibilityMap);
+        $statusOptions = ['pending', 'approved', 'rejected'];
+
+        if ($statusFilter && in_array($statusFilter, $statusOptions)) {
+            $requestsQuery->where('status', $statusFilter);
+        }
+
+        if ($bloodTypeFilter && in_array($bloodTypeFilter, $bloodTypes)) {
+            $requestsQuery->where('blood_type', $bloodTypeFilter);
+        }
+
+        $requests = $requestsQuery->get();
 
         // Optimized Inventory Calculation
-        $bloodTypes = array_keys($this->compatibilityMap);
         $inventory = [];
 
         foreach ($bloodTypes as $type) {
@@ -45,7 +58,7 @@ class BloodRequestController extends Controller
             $inventory[$type] = max(0, $in - $out);
         }
 
-        return view('blood-requests.index', compact('donors', 'requests', 'inventory'));
+        return view('admin.BloodRequest', compact('donors', 'requests', 'inventory', 'bloodTypes'));
     }
 
     /**

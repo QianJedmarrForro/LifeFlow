@@ -127,11 +127,28 @@
         }
         .lf-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
+        .toast-stack {
+            position: fixed;
+            top: 90px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: min(360px, calc(100% - 48px));
+            max-width: 100%;
+        }
+
         .toast-notify {
-            position: fixed; top: 90px; right: 24px; z-index: 9999;
-            padding: 16px 24px; background: #fff; border-radius: 12px;
+            position: relative;
+            padding: 16px 24px;
+            background: #fff;
+            border-radius: 12px;
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-            display: flex; align-items: center; gap: 15px; border-left: 6px solid;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 6px solid;
         }
 
         [x-cloak] { display: none !important; }
@@ -142,25 +159,29 @@
 <div class="lf-shell" :class="!sidebarOpen ? 'sidebar-collapsed' : ''">
 
     <!-- Toasts (Success/Error) -->
-    @if(session('success'))
-    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition x-cloak class="toast-notify" style="border-color: #10b981;">
-        <span style="font-size: 24px;">✅</span>
-        <div>
-            <div style="font-weight: 800; color: #111827; font-size: 14px;">Action Successful</div>
-            <div style="color: #6b7280; font-size: 13px;">{{ session('success') }}</div>
+    <div class="toast-stack" aria-live="polite" aria-atomic="true">
+        @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition x-cloak class="toast-notify" style="border-color: #10b981;">
+            <span style="font-size: 24px;">✅</span>
+            <div>
+                <div style="font-weight: 800; color: #111827; font-size: 14px;">Action Successful</div>
+                <div style="color: #6b7280; font-size: 13px;">{{ session('success') }}</div>
+            </div>
         </div>
-    </div>
-    @endif
+        @endif
 
-    @if(session('error'))
-    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" x-transition x-cloak class="toast-notify" style="border-color: #ef4444;">
-        <span style="font-size: 24px;">⚠️</span>
-        <div>
-            <div style="font-weight: 800; color: #111827; font-size: 14px;">Medical Alert / Error</div>
-            <div style="color: #6b7280; font-size: 13px;">{{ session('error') }}</div>
+        @if(session('error'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" x-transition x-cloak class="toast-notify" style="border-color: #ef4444;">
+            <span style="font-size: 24px;">⚠️</span>
+            <div>
+                <div style="font-weight: 800; color: #111827; font-size: 14px;">Medical Alert / Error</div>
+                <div style="color: #6b7280; font-size: 13px;">{{ session('error') }}</div>
+            </div>
         </div>
+        @endif
+
+        @stack('toasts')
     </div>
-    @endif
 
     <!-- Main Header -->
     <header class="lf-header">

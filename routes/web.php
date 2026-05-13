@@ -23,7 +23,8 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->group(function () {
+// Gidugangan nako og 'prevent-back' diri para dili na mabalikan inig logout
+Route::middleware(['auth', 'prevent-back'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -62,4 +63,4 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/donors', [AdminController::class, 'donors'])->name('admin.donors');
         Route::get('/donors-records', [DonationController::class, 'showRecords'])->name('donors.records');
     });
-});
+}); 

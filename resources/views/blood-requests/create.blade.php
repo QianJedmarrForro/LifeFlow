@@ -2,7 +2,7 @@
 <style>
     .page-main-container {
         font-family: 'DM Sans', sans-serif;
-        padding: 40px;
+        padding: 60px 20px; /* Mas dako nga padding sa taas/ubos */
         background-color: #f8fafc;
         min-height: 100vh;
         display: flex;
@@ -12,28 +12,28 @@
 
     .lf-page-header {
         width: 100%;
-        max-width: 800px;
+        max-width: 1100px; /* Gidako gikan sa 800px */
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
     }
 
     .lf-page-title {
         font-family: 'Serif', 'Georgia', serif;
-        font-size: 36px;
+        font-size: 42px; /* Mas dako nga title */
         color: #1e293b;
         margin: 0;
     }
 
     .lf-card {
         background: white;
-        border-radius: 16px;
-        padding: 40px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-radius: 24px; /* Mas rounded */
+        padding: 50px; /* Gidugangan ang padding sa sulod */
+        box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.05);
         border: 1px solid #e2e8f0;
         width: 100%;
-        max-width: 800px;
+        max-width: 1100px; /* Gidako ang card width */
         box-sizing: border-box;
     }
 
@@ -41,20 +41,21 @@
         display: block;
         font-weight: 700;
         color: #1e40af;
-        margin-bottom: 8px;
-        font-size: 13px;
+        margin-bottom: 12px;
+        font-size: 14px;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .form-input {
         width: 100%;
         background: #f1f5f9;
         border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        padding: 14px;
+        border-radius: 12px;
+        padding: 18px; /* Mas dako nga input height */
         font-family: inherit;
         box-sizing: border-box;
-        font-size: 14px;
+        font-size: 16px; /* Gidako ang text size sa input */
         outline: none;
         transition: 0.2s;
     }
@@ -62,6 +63,58 @@
     .form-input:focus {
         border-color: #3b82f6;
         background: #fff;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Custom Dropdown Styling */
+    .custom-select-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .custom-select-button {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .custom-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-top: 10px;
+        max-height: 350px; /* Gitas-an gamay ang scroll area */
+        overflow-y: auto;
+        z-index: 50;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-group-label {
+        padding: 12px 18px;
+        font-size: 12px;
+        font-weight: 800;
+        color: #64748b;
+        background: #f8fafc;
+        text-transform: uppercase;
+    }
+
+    .dropdown-item {
+        padding: 14px 24px;
+        font-size: 15px;
+        color: #334155;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f1f5f9;
+        color: #ef4444;
     }
 
     .btn-submit {
@@ -69,45 +122,77 @@
         background-color: #ef4444;
         color: white;
         border: none;
-        border-radius: 10px;
-        padding: 16px;
+        border-radius: 12px;
+        padding: 20px; /* Mas dako nga button */
         font-weight: 700;
-        font-size: 16px;
+        font-size: 18px;
         cursor: pointer;
         transition: 0.3s;
-        margin-top: 10px;
+        margin-top: 20px;
     }
 
     .btn-submit:hover {
         background-color: #dc2626;
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
     }
+
+    [x-cloak] { display: none !important; }
 </style>
 
 <div class="page-main-container">
     <div class="lf-page-header">
         <h1 class="lf-page-title">Blood Request</h1>
-        <div style="font-weight: 600; color: #64748b;">
+        <div style="font-weight: 600; color: #64748b; font-size: 18px;">
             {{ now()->format('F j, Y') }} 🏥
         </div>
     </div>
 
     <div class="lf-card">
-        <h2 style="margin-bottom: 25px; color: #1e293b; font-weight: 700;">Patient & Request Details</h2>
+        <h2 style="margin-bottom: 35px; color: #1e293b; font-weight: 700; font-size: 24px;">Patient & Request Details</h2>
 
         <form action="{{ route('blood-requests.store') }}" method="POST">
             @csrf
 
-            <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 25px;">
                 <label class="form-label">Patient Name</label>
                 <input type="text" name="patient_name" class="form-input" placeholder="Full name of the patient" required>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
-                <div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:25px;">
+                <!-- Custom Hospital Dropdown -->
+                <div x-data="{ 
+                    open: false, 
+                    selected: '', 
+                    placeholder: 'Select Hospital',
+                    hospitals: [
+                        { group: 'Davao City', names: ['Southern Philippines Medical Center (SPMC)', 'Davao Doctors Hospital', 'San Pedro Hospital', 'Brokenshire Medical Center', 'Metro Davao Medical Research Center (MDMRC)', 'Ricardo Limso Medical Center'] },
+                        { group: 'Davao del Norte', names: ['Davao Regional Medical Center (DRMC)', 'Tagum Doctors Hospital', 'Tagum Global Medical Center', 'Bishop Joseph Regan Memorial Hospital'] },
+                        { group: 'Davao del Sur', names: ['Davao del Sur Provincial Hospital', 'Digos Doctors Hospital'] },
+                        { group: 'Davao de Oro', names: ['Davao de Oro Provincial Hospital'] },
+                        { group: 'Davao Oriental', names: ['Davao Oriental Provincial Medical Center'] }
+                    ]
+                }" class="custom-select-container">
                     <label class="form-label">Hospital Name</label>
-                    <input type="text" name="hospital" class="form-input" placeholder="Name of hospital" required>
+                    <input type="hidden" name="hospital" :value="selected" required>
+
+                    <button type="button" @click="open = !open" class="form-input custom-select-button">
+                        <span x-text="selected ? selected : placeholder" :style="selected ? 'color: #1e293b' : 'color: #94a3b8'"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" :style="open ? 'transform: rotate(180deg)' : ''" style="transition: 0.3s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+
+                    <div x-show="open" @click.outside="open = false" x-cloak class="custom-dropdown-list">
+                        <template x-for="region in hospitals" :key="region.group">
+                            <div>
+                                <div class="dropdown-group-label" x-text="region.group"></div>
+                                <template x-for="name in region.names" :key="name">
+                                    <div class="dropdown-item" @click="selected = name; open = false" x-text="name"></div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
                 </div>
+
                 <div>
                     <label class="form-label">Blood Type Needed</label>
                     <select name="blood_type" class="form-input" required>
@@ -119,7 +204,7 @@
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:25px;">
                 <div>
                     <label class="form-label">Units Needed (ml)</label>
                     <input type="number" name="units" class="form-input" placeholder="e.g. 450" required min="1">
@@ -130,7 +215,7 @@
                 </div>
             </div>
 
-            <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 25px;">
                 <label class="form-label">Priority Level</label>
                 <select name="priority" class="form-input" required>
                     <option value="Normal">Normal</option>
@@ -139,16 +224,16 @@
                 </select>
             </div>
 
-            <div style="margin-bottom: 30px;">
+            <div style="margin-bottom: 35px;">
                 <label class="form-label">Reason for Request</label>
-                <textarea name="reason" class="form-input" style="height: 100px; resize: none;" placeholder="Medical condition or reason for request..."></textarea>
+                <textarea name="reason" class="form-input" style="height: 120px; resize: none;" placeholder="Medical condition or reason for request..."></textarea>
             </div>
 
             <button type="submit" class="btn-submit">
                 Submit Blood Request
             </button>
             
-            <a href="{{ route('dashboard') }}" style="display: block; text-align: center; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600;">
+            <a href="{{ route('dashboard') }}" style="display: block; text-align: center; margin-top: 25px; color: #64748b; text-decoration: none; font-size: 15px; font-weight: 600;">
                 Cancel and Go Back
             </a>
         </form>

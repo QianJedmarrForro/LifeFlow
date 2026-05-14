@@ -65,7 +65,7 @@
 
     <div class="lf-card">
         <h2 style="margin-bottom: 20px; color: #1e293b; font-size: 20px; display: flex; align-items: center; gap: 10px;">
-            🩸 Incoming Requests
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#ef4444" style="flex-shrink:0;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Incoming Requests
         </h2>
         
         <table class="request-table">
@@ -139,7 +139,7 @@
                 @if($donor->profile_photo)
                     <img src="{{ asset('storage/' . $donor->profile_photo) }}" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #f1f5f9;">
                 @else
-                    <div style="width: 55px; height: 55px; border-radius: 50%; background: #f8fafc; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 24px; border: 2px solid #f1f5f9;">👤</div>
+                    <div style="width: 55px; height: 55px; border-radius: 50%; background: #f8fafc; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 24px; border: 2px solid #f1f5f9;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
                 @endif
 
                 <div style="flex: 1;">

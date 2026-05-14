@@ -23,6 +23,8 @@ class Donation extends Model
         'blood_type',
         'eligible',
         'status',
+        'id_type',
+        'health_notes',
     ];
 
     /**

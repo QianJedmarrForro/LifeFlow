@@ -29,7 +29,7 @@ class ProfileController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'blood_type' => ['nullable', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'], // Added blood type validation
             'password' => ['nullable', 'min:6'],
-            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'], 
+            'profile_photo' => ['nullable', 'file', 'max:2048', 'extensions:jpg,jpeg,png,webp,gif'], 
         ]);
 
         // 2. Handle the Image Upload

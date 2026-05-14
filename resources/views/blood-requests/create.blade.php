@@ -144,7 +144,7 @@
     <div class="lf-page-header">
         <h1 class="lf-page-title">Blood Request</h1>
         <div style="font-weight: 600; color: #64748b; font-size: 18px;">
-            {{ now()->format('F j, Y') }} 🏥
+            {{ now()->format('F j, Y') }} <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         </div>
     </div>
 

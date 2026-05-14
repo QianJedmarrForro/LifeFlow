@@ -21,4 +21,4 @@
         </tr>
         @endforelse
     </tbody>
-</table>s
+</table>

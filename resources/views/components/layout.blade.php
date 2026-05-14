@@ -179,6 +179,7 @@
             @endcan
             
             <a href="{{ route('about') }}" class="lf-nav-item {{ request()->routeIs('about') ? 'active' : '' }}">About System</a>
+            <a href="{{ route('bulletin') }}" class="lf-nav-item {{ request()->routeIs('bulletin') ? 'active' : '' }}">Donation Guide</a>
         </nav>
 
         <div class="lf-user-section">
@@ -187,7 +188,12 @@
             @auth
             <div x-data="{ open: false }" style="position:relative;">
                 <div class="lf-avatar" @click="open = !open">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    @if(auth()->user()->profile_photo)
+                        <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <span style="display:none; width:100%; height:100%; align-items:center; justify-content:center;">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</span>
+                    @else
+                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    @endif
                 </div>
                 
                 <div x-show="open" 
@@ -214,5 +220,6 @@
         {{ $slot }}
     </main>
 
+    @stack('toasts')
 </body>
 </html>

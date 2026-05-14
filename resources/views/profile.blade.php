@@ -1,3 +1,4 @@
+{{-- If profile photos don't show, run: php artisan storage:link --}}
 <x-layout>
     <div style="max-width: 900px; margin: 0 auto; font-family: 'DM Sans', sans-serif; padding: 20px;">
         
@@ -5,6 +6,27 @@
             <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Profile Settings</h1>
             <p style="color: #64748b; margin-top: 8px;">Manage your account information and medical donor details.</p>
         </div>
+
+        @if(session('success'))
+            <div style="background:#ecfdf5; border-left:4px solid #10b981; padding:12px 16px; border-radius:8px; margin-bottom:24px; color:#065f46; font-weight:600; font-size:14px;">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div style="background:#fef2f2; border-left:4px solid #ef4444; padding:12px 16px; border-radius:8px; margin-bottom:24px; color:#991b1b; font-weight:600; font-size:14px;">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if($errors->any())
+            <div style="background:#fef2f2; border-left:4px solid #ef4444; padding:12px 16px; border-radius:8px; margin-bottom:24px; color:#991b1b; font-size:13px;">
+                <strong style="font-weight:700;">Please fix the following:</strong>
+                <ul style="margin:8px 0 0 16px; padding:0;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
             
@@ -67,6 +89,11 @@
                     <div style="margin-bottom: 30px;">
                         <label style="display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: #1e293b;">Email Address</label>
                         <input type="email" name="email" value="{{ auth()->user()->email }}" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc;">
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <label style="display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: #1e293b;">New Password <span style="color:#94a3b8; font-weight:400;">(leave blank to keep current)</span></label>
+                        <input type="password" name="password" placeholder="••••••••" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc;">
                     </div>
 
                     <div style="border-top: 1px solid #f1f5f9; padding-top: 30px; display: flex; justify-content: flex-end; gap: 15px;">

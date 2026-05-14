@@ -241,17 +241,17 @@
         <h2 class="section-title">Our Mission & Vision</h2>
         <div class="mission-cards">
             <div class="mission-card">
-                <span class="mission-card-icon">🎯</span>
+                <span class="mission-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
                 <h3>Our Mission</h3>
                 <p>To streamline blood donation management and create a reliable network that ensures safe, efficient blood supply to those who need it most.</p>
             </div>
             <div class="mission-card">
-                <span class="mission-card-icon">💡</span>
+                <span class="mission-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span>
                 <h3>Our Vision</h3>
                 <p>A world where no one dies from preventable blood loss, powered by technology that makes giving blood simple and rewarding.</p>
             </div>
             <div class="mission-card">
-                <span class="mission-card-icon">❤️</span>
+                <span class="mission-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
                 <h3>Our Values</h3>
                 <p>We believe in compassion, transparency, and innovation. Every action we take is guided by our commitment to saving lives.</p>
             </div>
@@ -263,15 +263,15 @@
         <h2 class="section-title">Our Impact</h2>
         <div class="impact-stats">
             <div class="stat-box">
-                <div class="stat-number">5000+</div>
+                <div class="stat-number">{{ number_format($totalDonors) }}+</div>
                 <div class="stat-label">Registered Donors</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number">12000+</div>
-                <div class="stat-label">Units Collected</div>
+                <div class="stat-number">{{ number_format($totalUnitsDonated) }}+</div>
+                <div class="stat-label">Units Collected (ml)</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number">500+</div>
+                <div class="stat-number">{{ number_format($livesSaved) }}+</div>
                 <div class="stat-label">Lives Saved</div>
             </div>
             <div class="stat-box">
@@ -286,17 +286,17 @@
         <h2 class="section-title">Why Choose LifeFlow?</h2>
         <div class="mission-cards">
             <div class="mission-card">
-                <span class="mission-card-icon">🔒</span>
+                <span class="mission-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
                 <h3>Secure & Reliable</h3>
                 <p>Your health data is protected with enterprise-grade security. We never compromise on safety.</p>
             </div>
             <div class="mission-card">
-                <span class="mission-card-icon">⚡</span>
+                <span class="mission-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                 <h3>Fast & Efficient</h3>
                 <p>Real-time blood inventory tracking ensures quick access to the right blood type when needed most.</p>
             </div>
             <div class="mission-card">
-                <span class="mission-card-icon">🌍</span>
+                <span class="mission-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
                 <h3>Community Driven</h3>
                 <p>We're built by donors, for donors. Your feedback shapes our platform and our mission.</p>
             </div>
@@ -310,17 +310,17 @@
         
         <div class="contact-grid">
             <div class="contact-card">
-                <span class="contact-icon">📧</span>
+                <span class="contact-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                 <div class="contact-info">support@lifeflow.ph</div>
                 <div class="contact-label">Official Email</div>
             </div>
             <div class="contact-card">
-                <span class="contact-icon">📞</span>
+                <span class="contact-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.24h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
                 <div class="contact-info">+63 912 345 6789</div>
                 <div class="contact-label">Hotline Number</div>
             </div>
             <div class="contact-card">
-                <span class="contact-icon">📍</span>
+                <span class="contact-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
                 <div class="contact-info">Davao City, PH</div>
                 <div class="contact-label">Headquarters</div>
             </div>

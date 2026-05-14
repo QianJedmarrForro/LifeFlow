@@ -11,7 +11,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReportController;
 
 Route::get('/', function () { return view('welcome'); })->name('home');
-Route::get('/about', function () { return view('aboutus'); })->name('about');
+Route::get('/bulletin', function () { return view('bulletin'); })->name('bulletin');
+Route::get('/about', function () {
+    $totalDonors = \App\Models\User::where('role', 'user')->count();
+    $totalDonations = \App\Models\Donation::count();
+    $totalUnitsDonated = \App\Models\Donation::sum('units');
+    $livesSaved = floor($totalUnitsDonated / 450);
+    return view('aboutus', compact('totalDonors', 'totalDonations', 'totalUnitsDonated', 'livesSaved'));
+})->name('about');
 Route::get('/contact', function () { return view('contactus'); })->name('contact');
 
 Route::middleware('guest')->group(function () {
@@ -35,6 +42,7 @@ Route::middleware(['auth', 'prevent-back'])->group(function () {
     Route::middleware('can:user-only')->group(function () {
         Route::get('/donate/create', [DonationController::class, 'create'])->name('donations.create');
         Route::post('/donate', [DonationController::class, 'store'])->name('donations.store');
+        Route::get('/donate/{id}', [DonationController::class, 'show'])->name('donations.show');
         Route::get('/information', function () {
             return view('information');
         })->name('information');
@@ -62,5 +70,7 @@ Route::middleware(['auth', 'prevent-back'])->group(function () {
         
         Route::get('/admin/donors', [AdminController::class, 'donors'])->name('admin.donors');
         Route::get('/donors-records', [DonationController::class, 'showRecords'])->name('donors.records');
+        Route::get('/admin/donations', [AdminController::class, 'donations'])->name('admin.donations');
+        Route::get('/admin/donations/{id}', [AdminController::class, 'donationDetail'])->name('admin.donation.detail');
     });
 }); 

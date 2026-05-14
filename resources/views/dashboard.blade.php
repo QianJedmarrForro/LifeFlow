@@ -165,7 +165,7 @@
         @if(session('reward'))
             @push('toasts')
                 <div id="reward-toast" class="reward-toast toast-notify" style="border-color: #f97316;">
-                    <span style="font-size: 24px;">🎉</span>
+                    <span style="display:inline-flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
                     <div>
                         <h4 style="margin: 0 0 4px; font-size: 14px; color: #111827; font-weight: 800;">Reward Earned</h4>
                         <p style="margin: 0; color: #4b5563; font-size: 13px;">You gained one point! Your donation was recorded. Keep going to unlock more rewards.</p>
@@ -176,13 +176,13 @@
 
         <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
             <div>
-                <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome back, {{ auth()->user()->name }} 👋</h1>
+                <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome back, {{ auth()->user()->name }} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0m-2 6V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-5a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"/></svg></h1>
                 <p style="color: #64748b; margin-top: 8px;">Your donor activity and health overview at a glance.</p>
             </div>
             <div style="text-align: right;">
                 <span style="display: block; font-size: 12px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Current Status</span>
                 <div class="status-action" id="rewards-trigger">
-                    <span>🩸</span>
+                    <span><svg width="18" height="18" viewBox="0 0 24 24" fill="#C0392B" style="vertical-align:middle;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span>
                     <div>Donation Rewards</div>
                 </div>
                 <span style="display:block; margin-top: 6px; color: #22c55e; font-weight: 700;">● Active Donor</span>
@@ -224,6 +224,7 @@
                                 <th style="text-align: left; padding: 12px 24px;">Type</th>
                                 <th style="text-align: left; padding: 12px 24px;">Volume</th>
                                 <th style="text-align: left; padding: 12px 24px;">Status</th>
+                                <th style="text-align: left; padding: 12px 24px;">Details</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -233,6 +234,14 @@
                                 <td style="padding: 16px 24px;"><span style="background: #fee2e2; color: #C0392B; padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 12px;">{{ $donation->blood_type }}</span></td>
                                 <td style="padding: 16px 24px; font-size: 14px; color: #64748b;">{{ $donation->units }}ml</td>
                                 <td style="padding: 16px 24px;"><span style="color: #10b981; font-weight: 700; font-size: 12px;">Completed</span></td>
+                                <td style="padding: 16px 24px;">
+                                    <a href="{{ route('donations.show', $donation->id) }}"
+                                       style="display:inline-flex; align-items:center; gap:5px; background:#F1F5F9; color:#374151; text-decoration:none; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700; transition:background 0.2s;"
+                                       onmouseover="this.style.background='#E2E8F0'" onmouseout="this.style.background='#F1F5F9'">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        View
+                                    </a>
+                                </td>
                             </tr>
                             @empty
                             <tr><td colspan="4" style="padding: 40px; text-align: center; color: #94a3b8;">No donations recorded yet.</td></tr>
@@ -283,7 +292,7 @@
                     <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">{{ $ann->title }}</h4>
                     <p style="font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.8);">{{ $ann->body }}</p>
                     @if($ann->tag == 'urgent')
-                        <div style="position: absolute; right: -10px; bottom: -10px; font-size: 80px; opacity: 0.1;">🩸</div>
+                        <div style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1;"><svg width="80" height="80" viewBox="0 0 24 24" fill="white"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
                     @endif
                 </div>
                 @endforeach
@@ -302,7 +311,7 @@
             <button id="reward-modal-close" class="reward-modal-close">✕</button>
         </div>
         <div style="display: flex; gap: 18px; align-items: center; margin-bottom: 20px;">
-            <div class="reward-bag" style="width: 62px; height: 62px; font-size: 28px;">🩸</div>
+            <div class="reward-bag" style="width: 62px; height: 62px; font-size: 28px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
             <div>
                 <div style="font-size: 15px; font-weight: 800; color: #111827;">{{ $totalDonations }} donation{{ $totalDonations == 1 ? '' : 's' }} completed</div>
                 <div style="font-size: 13px; color: #6b7280; margin-top: 6px;">You've earned {{ $totalDonations }} point{{ $totalDonations == 1 ? '' : 's' }} so far.</div>

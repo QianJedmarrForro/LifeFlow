@@ -26,11 +26,13 @@ class AdminController extends Controller
                 ->whereIn('status', ['approved', 'Approved'])
                 ->sum('units');
 
-            $currentStock = $totalDonated - $totalRequested;
+            $currentStock = max(0, $totalDonated - $totalRequested);
+            $bags = floor($currentStock / 450);
 
             $inventory[] = (object)[
-                'type' => $type,
-                'stock' => $currentStock,
+                'type'   => $type,
+                'stock'  => $currentStock,
+                'bags'   => $bags,
                 'status' => $currentStock < 2000 ? 'Low' : 'Stable'
             ];
         }
@@ -48,12 +50,11 @@ class AdminController extends Controller
             ->take(10)
             ->get();
 
-        // 4. UPDATED: Fetch Recent DONATIONS (Automatic hide after 3 days)
-        // Only shows donations created within the last 72 hours.
+        // 4. UPDATED: Fetch ALL DONATIONS (ordered latest first, take 20)
         $recentDonations = Donation::with('user')
             ->whereIn('status', ['approved', 'completed', 'Approved', 'Completed'])
-            ->where('created_at', '>=', now()->subDays(3)) 
             ->latest()
+            ->take(20)
             ->get();
 
         // 5. Fetch Registered Users
@@ -83,6 +84,18 @@ class AdminController extends Controller
         $request = BloodRequest::findOrFail($id);
         $request->update(['status' => 'rejected']);
         return back()->with('error', 'Blood request has been rejected.');
+    }
+
+    public function donationDetail($id)
+    {
+        $donation = Donation::with('user')->findOrFail($id);
+        return view('admin.donation-detail', compact('donation'));
+    }
+
+    public function donations()
+    {
+        $donations = Donation::with('user')->latest()->get();
+        return view('admin.donations', compact('donations'));
     }
 
     public function donors()

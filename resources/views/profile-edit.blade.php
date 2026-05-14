@@ -1,3 +1,4 @@
+{{-- If profile photos don't show, run: php artisan storage:link --}}
 <x-layout>
 <style>
     .profile-container {
@@ -81,20 +82,39 @@
 <div class="profile-container">
     <div class="profile-card">
         <h2 style="margin: 0 0 10px 0; font-size: 24px; color: #1e293b;">Account Settings</h2>
-        <p style="color: #64748b; margin-bottom: 30px;">Update your personal information and profile picture.</p>
+        <p style="color: #64748b; margin-bottom: 20px;">Update your personal information and profile picture.</p>
+
+        @if(session('success'))
+            <div style="background:#ecfdf5; border-left:4px solid #10b981; padding:12px 16px; border-radius:8px; margin-bottom:20px; color:#065f46; font-weight:600; font-size:14px;">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div style="background:#fef2f2; border-left:4px solid #ef4444; padding:12px 16px; border-radius:8px; margin-bottom:20px; color:#991b1b; font-weight:600; font-size:14px;">
+                {{ session('error') }}
+            </div>
+        @endif
 
         <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
 
             <div class="photo-upload-section">
-                @if(auth()->user()->profile_photo)
-                    <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" class="current-avatar">
-                @else
-                    <div class="current-avatar" style="display: flex; align-items: center; justify-content: center; background: #f1f5f9; font-size: 40px;">👤</div>
-                @endif
-                <label for="profile_photo" style="cursor: pointer; color: #ef4444; font-weight: 600; font-size: 14px;">Change Photo</label>
-                <input type="file" name="profile_photo" id="profile_photo" style="display: none;" onchange="this.form.submit()">
+                <div style="position:relative; display:inline-block; margin-bottom:10px;">
+                    @if(auth()->user()->profile_photo)
+                        <img id="photo-preview" src="{{ asset('storage/' . auth()->user()->profile_photo) }}" class="current-avatar">
+                    @else
+                        <div id="photo-preview-placeholder" class="current-avatar" style="display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <img id="photo-preview" src="" class="current-avatar" style="display:none;">
+                    @endif
+                    <label for="profile_photo" style="position:absolute; bottom:4px; right:4px; background:#ef4444; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </label>
+                </div>
+                <input type="file" name="profile_photo" id="profile_photo" style="display: none;" accept="image/*">
+                <span style="color: #64748b; font-size: 13px;">Click the camera icon to change photo</span>
             </div>
 
             <div class="form-group">
@@ -121,3 +141,23 @@
     </div>
 </div>
 </x-layout>
+
+<script>
+document.getElementById('profile_photo').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById('photo-preview');
+        const placeholder = document.getElementById('photo-preview-placeholder');
+        if (preview) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
+    };
+    reader.readAsDataURL(file);
+});
+</script>

@@ -103,7 +103,7 @@
 
     <div id="reportContent">
         <div style="margin-bottom: 40px;">
-            <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px;">🩸 Recent Donations</h3>
+            <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px; display:flex; align-items:center; gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Recent Donations</h3>
             <div id="donationsTableContainer" style="background:#fff; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.05); overflow:hidden; border: 1px solid #e2e8f0;">
                 @include('admin.reports.partials.donations_table')
             </div>

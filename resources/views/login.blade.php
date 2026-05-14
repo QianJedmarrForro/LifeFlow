@@ -6,8 +6,6 @@
     <title>Login | {{ config('app.name', 'Blood Bank System') }}</title>
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet"/>
-    
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,7 +86,6 @@
         .bb-input-group {
             text-align: left;
             margin-bottom: 1.1rem;
-            position: relative; /* Added for icon positioning */
         }
 
         .bb-input-group label {
@@ -96,6 +93,12 @@
             color: #6e5c5c;
             display: block;
             margin-bottom: 4px;
+        }
+
+        .bb-pass-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .bb-input {
@@ -107,9 +110,8 @@
             transition: 0.2s;
         }
 
-        /* Prevent text overlapping with the eye icon */
         .bb-input-password {
-            padding-right: 42px;
+            padding-right: 45px;
         }
 
         .bb-input:focus {
@@ -118,23 +120,28 @@
             box-shadow: 0 0 0 3px rgba(196, 64, 64, 0.1);
         }
 
-        /* Toggle Button Styles */
-        .bb-toggle-btn {
+        /* Hide native browser password reveal icon (Edge, IE, Chrome, Safari) */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear { display: none !important; }
+        input::-webkit-strong-password-auto-fill-button,
+        input::-webkit-credentials-auto-fill-button { display: none !important; }
+
+        .bb-toggle-pass {
             position: absolute;
-            right: 12px;
-            bottom: 10px;
+            right: 14px;
             background: none;
             border: none;
             cursor: pointer;
-            color: #8a7878;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 4px;
+            color: #8a7878;
             transition: color 0.2s;
         }
 
-        .bb-toggle-btn:hover { color: #c44040; }
+        .bb-toggle-pass:hover { color: #c44040; }
+
+        .bb-toggle-pass svg { width: 20px; height: 20px; }
 
         .bb-btn {
             width: 100%;
@@ -150,7 +157,7 @@
             transition: 0.3s;
         }
 
-        .bb-btn:hover { 
+        .bb-btn:hover {
             background: #b53636;
             transform: translateY(-1px);
         }
@@ -172,8 +179,6 @@
             font-size: 12px;
             margin-top: 4px;
         }
-
-        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body>
@@ -201,25 +206,19 @@
                 @enderror
             </div>
 
-            <div class="bb-input-group" x-data="{ show: false }">
+            <div class="bb-input-group">
                 <label>Password</label>
-                <input :type="show ? 'text' : 'password'" 
-                       name="password" 
-                       class="bb-input bb-input-password" 
-                       required 
-                       placeholder="Enter your password">
-                
-                <button type="button" class="bb-toggle-btn" @click="show = !show" tabindex="-1">
-                    <svg x-show="!show" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    <svg x-show="show" x-cloak width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"></path>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                    </svg>
-                </button>
-
+                <div class="bb-pass-wrapper">
+                    <input type="password" name="password" id="login_password" class="bb-input bb-input-password" required placeholder="password">
+                    <button type="button" class="bb-toggle-pass" onclick="togglePassword('login_password', this)" tabindex="-1">
+                        <span class="toggle-icon">
+                            <!-- Eye Slash by default (password is hidden) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
                 @error('password')
                     <div class="bb-error">{{ $message }}</div>
                 @enderror
@@ -228,12 +227,38 @@
             <button type="submit" class="bb-btn">Login to Account</button>
 
             <div class="bb-footer">
-                Don’t have an account?
+                Don't have an account?
                 <a href="{{ route('register') }}">Register Here</a>
             </div>
         </form>
 
     </div>
+
+    <script>
+        const ICON_EYE_SLASH = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+            </svg>`;
+
+        const ICON_EYE_OPEN = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>`;
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const iconSpan = button.querySelector('.toggle-icon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconSpan.innerHTML = ICON_EYE_OPEN;   // now visible → eye open
+            } else {
+                input.type = 'password';
+                iconSpan.innerHTML = ICON_EYE_SLASH;  // now hidden → eye slash
+            }
+        }
+    </script>
 
 </body>
 </html>

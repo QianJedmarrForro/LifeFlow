@@ -56,7 +56,7 @@
             height: var(--header-h);
             background: var(--surface);
             display: grid;
-            grid-template-columns: 1fr auto 1fr; 
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             padding: 0 40px;
             z-index: 1000;
@@ -68,26 +68,26 @@
             justify-content: flex-start;
         }
 
-        .lf-logo { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            text-decoration: none; 
+        .lf-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
         }
-        
+
         .lf-logo-icon {
             width: 38px; height: 38px; border-radius: 10px;
             background: linear-gradient(135deg, #D72638, #FF4D5A);
             display: flex; align-items: center; justify-content: center;
         }
-        
+
         .lf-logo-icon img { width: 20px; filter: brightness(0) invert(1); }
 
-        .lf-logo-name { 
-            font-size: 20px; 
-            font-weight: 800; 
-            color: #FFFFFF; 
-            letter-spacing: -0.025em; 
+        .lf-logo-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.025em;
         }
 
         .lf-logo-name span { color: var(--red); }
@@ -158,9 +158,10 @@
 <body>
 
     <header class="lf-header">
+
         <div class="lf-logo-container">
             <a href="{{ route('dashboard') }}" class="lf-logo">
-                <div class="lf-logo-icon"><img src="/logo.svg"></div>
+                <x-logo style="width:45px; filter: brightness(0) invert(1);" />
                 <span class="lf-logo-name">Life<span>Flow</span></span>
             </a>
         </div>
@@ -177,33 +178,46 @@
                 <a href="{{ route('donations.create') }}" class="lf-nav-item {{ request()->routeIs('donations.create') ? 'active' : '' }}">Donate</a>
                 <a href="{{ route('blood-requests.create') }}" class="lf-nav-item {{ request()->routeIs('blood-requests.create') ? 'active' : '' }}">Request</a>
             @endcan
-            
+
             <a href="{{ route('about') }}" class="lf-nav-item {{ request()->routeIs('about') ? 'active' : '' }}">About System</a>
             <a href="{{ route('bulletin') }}" class="lf-nav-item {{ request()->routeIs('bulletin') ? 'active' : '' }}">Donation Guide</a>
         </nav>
 
         <div class="lf-user-section">
             <span class="portal-label">{{ auth()->user()->role ?? 'Guest' }} Portal</span>
-            
+
             @auth
             <div x-data="{ open: false }" style="position:relative;">
+
                 <div class="lf-avatar" @click="open = !open">
                     @if(auth()->user()->profile_photo)
-                        <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                        <span style="display:none; width:100%; height:100%; align-items:center; justify-content:center;">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</span>
+                        <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
+                             style="width:40px;height:40px;border-radius:12px;object-fit:cover;"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        {{-- fallback if photo fails to load --}}
+                        <span style="display:none; width:100%; height:100%; align-items:center; justify-content:center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8">
+                                <circle cx="12" cy="8" r="4"/>
+                                <path stroke-linecap="round" d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                            </svg>
+                        </span>
                     @else
-                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                        {{-- no photo: show profile SVG icon --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path stroke-linecap="round" d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                        </svg>
                     @endif
                 </div>
-                
-                <div x-show="open" 
-                     @click.outside="open = false" 
-                     x-transition 
-                     x-cloak 
+
+                <div x-show="open"
+                     @click.outside="open = false"
+                     x-transition
+                     x-cloak
                      style="position:absolute; right:0; top:52px; min-width:200px; background:#1e293b; border-radius:12px; padding:8px; box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.1);">
-                    
+
                     <a href="{{ route('profile') }}" style="display:block; padding:12px; color:#E2E8F0; text-decoration:none; font-size:13px; border-radius:8px;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">Profile</a>
-                    
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button style="width:100%; text-align:left; padding:12px; border:none; background:none; color:#FF6B6B; font-weight:700; cursor:pointer; font-size:13px; border-radius:8px;" onmouseover="this.style.background='rgba(255,107,107,0.1)'" onmouseout="this.style.background='none'">
@@ -211,9 +225,11 @@
                         </button>
                     </form>
                 </div>
+
             </div>
             @endauth
         </div>
+
     </header>
 
     <main class="lf-main">

@@ -139,6 +139,7 @@
             color: #10b981;
             font-size: 16px;
         }
+        
     </style>
     <div style="max-width: 1200px; margin: 0 auto; font-family: 'DM Sans', sans-serif;">
         
@@ -149,7 +150,7 @@
                     ✓
                 </div>
                 <div>
-                    <p style="color: #065f46; font-weight: 800; margin: 0; font-size: 14px;">Donate Success!</p>
+                    <p style="color: #065f46; font-weight: 800; margin: 0; font-size: 14px;">Welcome to LifeFlow!</p>
                     <p style="color: #047857; margin: 0; font-size: 13px;">{{ session('success') }}</p>
                 </div>
             </div>
@@ -176,7 +177,7 @@
 
         <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
             <div>
-                <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome back, {{ auth()->user()->name }} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0m-2 6V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-5a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"/></svg></h1>
+                <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome, {{ auth()->user()->name }} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0m-2 6V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-5a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"/></svg></h1>
                 <p style="color: #64748b; margin-top: 8px;">Your donor activity and health overview at a glance.</p>
             </div>
             <div style="text-align: right;">

@@ -87,7 +87,7 @@
         
         <div style="display: flex; gap: 12px; align-items: center;">
             <div style="position: relative;">
-                <span style="position: absolute; left: 12px; top: 10px; color: #94a3b8;">🔍</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 12px; top: 14px; color: #94a3b8;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" id="liveSearch" autocomplete="off" placeholder="Search name or blood type..." 
                     style="padding: 10px 10px 10px 35px; border-radius: 8px; border: 1px solid #e2e8f0; width: 280px; font-size: 14px;" class="search-input">
                 
@@ -103,14 +103,14 @@
 
     <div id="reportContent">
         <div style="margin-bottom: 40px;">
-            <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px; display:flex; align-items:center; gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Recent Donations</h3>
+            <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px; display:flex; align-items:center; gap:8px;"> Recent Donations</h3>
             <div id="donationsTableContainer" style="background:#fff; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.05); overflow:hidden; border: 1px solid #e2e8f0;">
                 @include('admin.reports.partials.donations_table')
             </div>
         </div>
 
         <div>
-            <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px;">📋 Request History</h3>
+            <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px;"> Request History</h3>
             <div id="requestsTableContainer" style="background:#fff; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.05); overflow:hidden; border: 1px solid #e2e8f0;">
                 @include('admin.reports.partials.requests_table')
             </div>
@@ -119,7 +119,7 @@
 </div>
 
 <button onclick="window.print()" class="floating-print-btn no-print">
-    <span style="font-size: 20px;">🖨️</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
     <span>Print Report</span>
 </button>
 

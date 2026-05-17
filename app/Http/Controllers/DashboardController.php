@@ -30,7 +30,9 @@ class DashboardController extends Controller
         // These feed the 'totalDonations', 'totalUnits', and 'totalRequests' summary cards
         $totalDonationsCount = Donation::where('user_id', $user->id)->count();
         $totalUnitsDonated   = Donation::where('user_id', $user->id)->sum('units');
-        $totalRequestsCount  = BloodRequest::where('user_id', $user->id)->count();
+        $pendingRequestsCount = BloodRequest::where('user_id', $user->id)->where('status', 'pending')->count();
+        $latestRequest = BloodRequest::where('user_id', $user->id)->latest()->first();
+        $activeRequestStatus = $latestRequest ? $latestRequest->status : null;
 
         // 2. ACTIVITY HISTORY (Tables)
         // Fetches the most recent 5 entries for a clean dashboard look
@@ -69,17 +71,33 @@ class DashboardController extends Controller
 
         $donationProgress = min(100, round(($totalDonationsCount / 10) * 100));
 
-        // 4. VIEW DATA MAPPING
+        // 4. NOTIFICATION CHECKING
+        // Fetch unread approved or rejected requests specifically for the current authenticated user
+        $hasUnreadNotifications = BloodRequest::where('user_id', $user->id)
+            ->whereIn('status', ['approved', 'rejected'])
+            ->where('is_read', false)
+            ->exists();
+
+        $notificationsList = BloodRequest::where('user_id', $user->id)
+            ->whereIn('status', ['approved', 'rejected'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // 5. VIEW DATA MAPPING
         return view('dashboard', [
-            'totalDonations'   => $totalDonationsCount,
-            'totalUnits'       => $totalUnitsDonated,
-            'totalRequests'    => $totalRequestsCount,
-            'donationHistory'  => $donationHistory,
-            'requestHistory'   => $requestHistory,
-            'announcements'    => $announcements,
-            'donationPoints'   => $totalDonationsCount,
-            'donationProgress' => $donationProgress,
-            'donationMilestone'=> 10,
+            'totalDonations'         => $totalDonationsCount,
+            'totalUnits'             => $totalUnitsDonated,
+            'pendingRequests'        => $pendingRequestsCount,
+            'activeRequestStatus'    => $activeRequestStatus,
+            'donationHistory'        => $donationHistory,
+            'requestHistory'         => $requestHistory,
+            'announcements'          => $announcements,
+            'donationPoints'         => $totalDonationsCount,
+            'donationProgress'       => $donationProgress,
+            'donationMilestone'      => 10,
+            'hasUnreadNotifications' => $hasUnreadNotifications,
+            'notificationsList'      => $notificationsList,
         ]);
     }
 }

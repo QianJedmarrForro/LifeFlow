@@ -63,12 +63,16 @@ class AdminController extends Controller
             ->take(8) 
             ->get();
 
+        // Fetch admin notifications (latest 10)
+        $adminNotifications = auth()->user()->notifications()->latest()->take(10)->get();
+
         return view('admin.dashboard', compact(
             'inventory', 
             'requests', 
             'processedRequests', 
             'recentDonations', 
-            'donors'
+            'donors',
+            'adminNotifications'
         ));
     }
 

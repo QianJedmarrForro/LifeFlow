@@ -21,19 +21,23 @@
     .hero-copy { max-width: 640px; }
 
     .hero-title {
-        font-size: 42px;
-        font-weight: 900;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 28px;
+        font-weight: 800;
         margin: 0;
-        line-height: 1.05;
-        letter-spacing: -0.6px;
+        line-height: 1.2;
+        letter-spacing: -0.03em;
         color: #0f172a;
     }
 
     .hero-subtitle {
-        margin-top: 16px;
+        font-family: 'DM Sans', sans-serif;
+        margin-top: 6px;
         color: #475569;
-        font-size: 15px;
-        line-height: 1.75;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.6;
+        letter-spacing: -0.01em;
     }
 
     .hero-actions {

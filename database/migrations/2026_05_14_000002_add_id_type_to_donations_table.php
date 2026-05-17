@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('donations', function (Blueprint $table) {
-            $table->string('id_type')->nullable();
-        });
+        if (!Schema::hasColumn('donations', 'id_type')) {
+            Schema::table('donations', function (Blueprint $table) {
+                $table->string('id_type')->nullable();
+            });
+        }
     }
 
     /**
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('donations', function (Blueprint $table) {
-            $table->dropColumn('id_type');
+            if (Schema::hasColumn('donations', 'id_type')) {
+                $table->dropColumn('id_type');
+            }
         });
     }
 };

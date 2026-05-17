@@ -10,8 +10,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReportController;
 
+// Public Guest Routes
 Route::get('/', function () { return view('welcome'); })->name('home');
 Route::get('/bulletin', function () { return view('bulletin'); })->name('bulletin');
+Route::get('/contact', function () { return view('contactus'); })->name('contact');
+
 Route::get('/about', function () {
     $totalDonors = \App\Models\User::where('role', 'user')->count();
     $totalDonations = \App\Models\Donation::count();
@@ -19,8 +22,8 @@ Route::get('/about', function () {
     $livesSaved = floor($totalUnitsDonated / 450);
     return view('aboutus', compact('totalDonors', 'totalDonations', 'totalUnitsDonated', 'livesSaved'));
 })->name('about');
-Route::get('/contact', function () { return view('contactus'); })->name('contact');
 
+// Authentication Forms (Guests Only)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
@@ -30,27 +33,36 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Gidugangan nako og 'prevent-back' diri para dili na mabalikan inig logout
+// Authenticated System Access
 Route::middleware(['auth', 'prevent-back'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // User Profile Management
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
+    // 🔔 Integrated Notification Core Route Mechanics
+    Route::post('/notifications/mark-as-read', [BloodRequestController::class, 'markNotificationsAsRead'])->name('notifications.markRead');
+    
+    Route::get('/notifications/mark-all-read', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return redirect()->back()->with('success', 'All notifications cleared.');
+    })->name('notifications.markAllRead');
+
+    // Standard Registered User Portal Routes
     Route::middleware('can:user-only')->group(function () {
         Route::get('/donate/create', [DonationController::class, 'create'])->name('donations.create');
         Route::post('/donate', [DonationController::class, 'store'])->name('donations.store');
         Route::get('/donate/{id}', [DonationController::class, 'show'])->name('donations.show');
-        Route::get('/information', function () {
-            return view('information');
-        })->name('information');
+        Route::get('/information', function () { return view('information'); })->name('information');
 
         Route::get('/blood-requests/create', [BloodRequestController::class, 'create'])->name('blood-requests.create');
         Route::post('/blood-requests', [BloodRequestController::class, 'store'])->name('blood-requests.store');
     });
 
+    // Central Administrative Management Suite Routes
     Route::middleware('can:admin-only')->group(function () {
         
         Route::get('/admin', function () {
@@ -73,4 +85,4 @@ Route::middleware(['auth', 'prevent-back'])->group(function () {
         Route::get('/admin/donations', [AdminController::class, 'donations'])->name('admin.donations');
         Route::get('/admin/donations/{id}', [AdminController::class, 'donationDetail'])->name('admin.donation.detail');
     });
-}); 
+});

@@ -23,33 +23,27 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // 1. Validate the incoming request
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'blood_type' => ['nullable', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'], // Added blood type validation
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'blood_type' => ['nullable', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'],
             'password' => ['nullable', 'min:6'],
-            'profile_photo' => ['nullable', 'file', 'max:2048', 'extensions:jpg,jpeg,png,webp,gif'], 
+            'profile_photo' => ['nullable', 'image', 'max:2048', 'mimes:jpg,jpeg,png,webp,gif'], 
         ]);
 
-        // 2. Handle the Image Upload
         if ($request->hasFile('profile_photo')) {
-            // Delete the old photo from storage if it exists to keep it clean
-            if ($user->profile_photo) {
+            if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
                 Storage::disk('public')->delete($user->profile_photo);
             }
 
-            // Store the new photo in 'storage/app/public/profile_photos'
             $path = $request->file('profile_photo')->store('profile_photos', 'public');
             $user->profile_photo = $path;
         }
 
-        // 3. Update User Information
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->blood_type = $request->blood_type; // Added this to save the blood type
+        $user->blood_type = $request->blood_type;
 
-        // 4. Update Password if provided
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }

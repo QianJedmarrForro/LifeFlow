@@ -1,7 +1,9 @@
-<x-layout>
+<x-layout :hasUnreadNotifications="$hasUnreadNotifications" :notificationsList="$notificationsList">
     <style>
         .reward-toast {
-            position: relative;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
             background: #ffffff;
             border: 1px solid rgba(229, 231, 235, 0.9);
             border-radius: 18px;
@@ -11,8 +13,9 @@
             align-items: center;
             gap: 14px;
             opacity: 0;
-            transform: translateY(-10px) scale(0.98);
+            transform: translateY(20px) scale(0.98);
             transition: transform 0.25s ease, opacity 0.25s ease;
+            z-index: 9999;
         }
         .reward-toast.show {
             opacity: 1;
@@ -55,7 +58,7 @@
             backdrop-filter: blur(2px);
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
             z-index: 9998;
         }
         .reward-modal-overlay.open {
@@ -72,13 +75,15 @@
             border-radius: 24px;
             padding: 24px;
             box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
-            transition: transform 0.28s ease, opacity 0.28s ease;
+            transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s ease;
             opacity: 0;
+            visibility: hidden;
             z-index: 9999;
         }
         .reward-modal.open {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
+            visibility: visible;
         }
         .reward-modal-header {
             display: flex;
@@ -139,8 +144,8 @@
             color: #10b981;
             font-size: 16px;
         }
-        
     </style>
+
     <div style="max-width: 1200px; margin: 0 auto; font-family: 'DM Sans', sans-serif;">
         
         {{-- SUCCESS NOTIFICATION --}}
@@ -150,7 +155,7 @@
                     ✓
                 </div>
                 <div>
-                    <p style="color: #065f46; font-weight: 800; margin: 0; font-size: 14px;">Welcome to LifeFlow!</p>
+                    <p style="color: #065f46; font-weight: 800; margin: 0; font-size: 14px;">LifeFlow!</p>
                     <p style="color: #047857; margin: 0; font-size: 13px;">{{ session('success') }}</p>
                 </div>
             </div>
@@ -177,7 +182,7 @@
 
         <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
             <div>
-                <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome, {{ auth()->user()->name }} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0m-2 6V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-5a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"/></svg></h1>
+                <h1 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0;">Welcome, {{ auth()->user()->name }} </h1>
                 <p style="color: #64748b; margin-top: 8px;">Your donor activity and health overview at a glance.</p>
             </div>
             <div style="text-align: right;">
@@ -205,8 +210,18 @@
 
             <div style="background: white; padding: 24px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
                 <div style="color: #64748b; font-size: 14px; font-weight: 600; margin-bottom: 10px;">Active Requests</div>
-                <div style="font-size: 36px; font-weight: 800; color: #1a1a1a;">{{ $totalRequests }}</div>
-                <div style="margin-top: 10px; font-size: 12px; color: #f59e0b;">Waiting for approval</div>
+                <div style="font-size: 36px; font-weight: 800; color: #1a1a1a;">{{ $pendingRequests }}</div>
+                <div style="margin-top: 10px; font-size: 12px;">
+                    @if($pendingRequests > 0)
+                        <span style="color: #f59e0b;">Waiting for approval</span>
+                    @elseif($activeRequestStatus === 'approved')
+                        <span style="color: #16a34a;">Approved</span>
+                    @elseif($activeRequestStatus === 'rejected')
+                        <span style="color: #ef4444;">Rejected</span>
+                    @else
+                        <span style="color: #94a3b8;">No active requests</span>
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -245,7 +260,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="4" style="padding: 40px; text-align: center; color: #94a3b8;">No donations recorded yet.</td></tr>
+                            <tr><td colspan="5" style="padding: 40px; text-align: center; color: #94a3b8;">No donations recorded yet.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -328,6 +343,31 @@
     </div>
 </x-layout>
 
+@push('notifications')
+    @if($notificationsList->isEmpty())
+        <div style="padding: 12px; color: var(--text-muted); font-size: 13px; text-align: center;">
+            No new notifications.
+        </div>
+    @else
+        @foreach($notificationsList as $notification)
+            <div style="padding: 10px; border-radius: 8px; margin-bottom: 6px; font-size: 13px; background: {{ $notification->is_read ? 'rgba(255,255,255,0.02)' : 'rgba(215,38,56,0.1)' }}; border-left: 3px solid {{ $notification->status == 'approved' ? '#10B981' : '#EF4444' }}; transition: 0.2s;">
+                <div style="font-weight: 700; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Blood Request {{ ucfirst($notification->status) }}</span>
+                    @if(!$notification->is_read)
+                        <span style="width: 6px; height: 6px; background: var(--red); border-radius: 50%;"></span>
+                    @endif
+                </div>
+                <p style="color: #94A3B8; margin-top: 2px; line-height: 1.4;">
+                    Your request for <strong>{{ $notification->blood_type }}</strong> blood ({{ $notification->bags }} {{ Str::plural('bag', $notification->bags) }}) has been {{ $notification->status }}.
+                </p>
+                <span style="font-size: 10px; color: #64748B; display: block; margin-top: 4px;">
+                    {{ $notification->updated_at->diffForHumans() }}
+                </span>
+            </div>
+        @endforeach
+    @endif
+@endpush
+
 <script>
 (function() {
     const trigger = document.getElementById('rewards-trigger');
@@ -337,14 +377,18 @@
     const toast = document.getElementById('reward-toast');
 
     function openModal() {
-        overlay.classList.add('open');
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden', 'false');
+        if(overlay && modal) {
+            overlay.classList.add('open');
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
     }
     function closeModal() {
-        overlay.classList.remove('open');
-        modal.classList.remove('open');
-        modal.setAttribute('aria-hidden', 'true');
+        if(overlay && modal) {
+            overlay.classList.remove('open');
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+        }
     }
 
     if (trigger) {
@@ -361,8 +405,12 @@
         });
     }
     if (toast) {
-        requestAnimationFrame(() => toast.classList.add('show'));
-        setTimeout(() => toast.classList.remove('show'), 2600);
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
     }
 })();
 </script>

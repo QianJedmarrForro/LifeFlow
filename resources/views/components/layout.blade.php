@@ -12,7 +12,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    {{-- KINI NGA SCRIPT PARA SA BACK BUTTON PROTECTION --}}
     <script>
         window.addEventListener('pageshow', function (event) {
             if (event.persisted || (typeof window.performance != 'undefined' && window.performance.navigation.type === 2)) {
@@ -152,6 +151,36 @@
             margin: 0 auto;
         }
 
+        .lf-bell-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .lf-bell-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .lf-bell-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #EF4444;
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 99px;
+            border: 2px solid var(--surface);
+        }
+
         [x-cloak] { display: none !important; }
     </style>
 </head>
@@ -184,6 +213,57 @@
         </nav>
 
         <div class="lf-user-section">
+            
+            @auth
+            <div x-data="{ openNotifications: false }" style="position: relative;">
+                <button @click="openNotifications = !openNotifications" id="notification-dropdown-btn" class="lf-bell-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2" class="hover:stroke-white transition-colors">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                    </svg>
+
+                    @if(auth()->user()->unreadNotifications->count() > 0)
+                        <span id="notification-badge" class="lf-bell-badge">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </span>
+                    @endif
+                </button>
+
+                <div x-show="openNotifications"
+                     @click.outside="openNotifications = false"
+                     x-transition
+                     x-cloak
+                     style="position:absolute; right:0; top:52px; width:320px; background:#1e293b; border-radius:12px; padding:4px; box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.1); z-index: 1010;">
+                    
+                    <div style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; font-weight: 700; color: #FFFFFF;">Notifications</span>
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                            <a href="{{ route('notifications.markAllRead') }}" style="font-size: 11px; color: #EF4444; text-decoration: none; font-weight: 500;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Mark all read</a>
+                        @endif
+                    </div>
+
+                    <div style="max-height: 280px; overflow-y: auto;">
+                        @forelse(auth()->user()->unreadNotifications as $notification)
+                            <div style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; flex-col; gap: 4px;">
+                                <div style="font-size: 12px; font-weight: 700; color: #FFFFFF; line-height: 1.4;">
+                                    {{ $notification->data['title'] ?? 'System Notice' }}
+                                </div>
+                                <div style="font-size: 11px; color: #94A3B8; line-height: 1.4; margin-top: 2px;">
+                                    {{ $notification->data['message'] ?? '' }}
+                                </div>
+                                <div style="font-size: 9px; color: #64748B; margin-top: 4px; font-weight: 500;">
+                                    {{ $notification->created_at->diffForHumans() }}
+                                </div>
+                            </div>
+                        @empty
+                            <div style="padding: 24px 12px; text-align: center; font-size: 12px; color: #94A3B8;">
+                                No new notifications
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+            @endauth
+
             <span class="portal-label">{{ auth()->user()->role ?? 'Guest' }} Portal</span>
 
             @auth
@@ -194,7 +274,6 @@
                         <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
                              style="width:40px;height:40px;border-radius:12px;object-fit:cover;"
                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                        {{-- fallback if photo fails to load --}}
                         <span style="display:none; width:100%; height:100%; align-items:center; justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8">
                                 <circle cx="12" cy="8" r="4"/>
@@ -202,7 +281,6 @@
                             </svg>
                         </span>
                     @else
-                        {{-- no photo: show profile SVG icon --}}
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8">
                             <circle cx="12" cy="8" r="4"/>
                             <path stroke-linecap="round" d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
@@ -237,5 +315,32 @@
     </main>
 
     @stack('toasts')
+
+    @auth
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const notificationBtn = document.getElementById('notification-dropdown-btn');
+            
+            if (notificationBtn) {
+                notificationBtn.addEventListener('click', function() {
+                    fetch("{{ route('notifications.markAllRead') }}", {
+                        method: "GET",
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => {
+                        const badge = document.getElementById('notification-badge');
+                        if (badge) {
+                            badge.style.display = 'none';
+                        }
+                    })
+                    .catch(error => console.error('Error handling notifications update:', error));
+                });
+            }
+        });
+    </script>
+    @endauth
 </body>
 </html>

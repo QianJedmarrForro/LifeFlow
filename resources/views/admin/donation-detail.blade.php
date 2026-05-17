@@ -23,7 +23,7 @@
         box-shadow: 0 8px 24px rgba(215,38,56,0.35);
         overflow: hidden;
     }
-    .admin-hero-body {}
+    .admin-hero-body { position:relative; z-index:1; }
     .admin-hero-label { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 5px; }
     .admin-hero-name { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.03em; margin-bottom: 5px; }
     .admin-hero-sub { font-size: 13px; color: #64748B; }

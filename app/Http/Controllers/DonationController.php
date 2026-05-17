@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donation;
+use App\Models\User; // 👈 Added to fetch system administrators
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\DonationSubmitted; // 👈 Added to trigger your notification
 // --- IMPORTANT: THESE TWO ARE REQUIRED FOR LARAVEL 11 ---
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -71,7 +73,8 @@ class DonationController extends Controller implements HasMiddleware
             'eligible'    => 'required',
         ]);
 
-        Donation::create([
+        // 1. Create and save the new donation record
+        $donation = Donation::create([
             'user_id'      => Auth::id(),
             'name'         => $request->name,
             'email'        => Auth::user()->email,
@@ -85,6 +88,12 @@ class DonationController extends Controller implements HasMiddleware
             'eligible'     => true,
             'status'       => 'approved',
         ]);
+
+        // 2. 🔔 Loop through and notify all admins of this incoming donation
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new DonationSubmitted($donation));
+        }
 
         return redirect()->route('dashboard')
             ->with('success', 'Thank you! Your donation has been recorded and added to the inventory.')

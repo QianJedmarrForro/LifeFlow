@@ -15,10 +15,13 @@
         }
 
         .lf-page-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            color: #1e293b;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
             margin: 0;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
         }
 
         .lf-card {
@@ -66,17 +69,17 @@
         <div class="lf-page-header">
             <div>
                 <h1 class="lf-page-title">{{ $heading ?? 'Donor Directory' }}</h1>
-                <p style="color: #64748b; font-size: 14px; margin-top: 5px;">{{ $description ?? 'Manage and view all registered blood donors.' }}</p>
+                <p style="font-family: 'DM Sans', sans-serif; color: #64748b; font-size: 14px; margin-top: 6px; font-weight: 400; letter-spacing: -0.01em; line-height: 1.6;">{{ $description ?? 'Manage and view all registered blood donors.' }}</p>
             </div>
-            <div style="font-weight: 600; color: #64748b; background: white; padding: 10px 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                {{ now()->format('F d, Y') }} 📅
+            <div style="font-family: 'DM Sans', sans-serif; font-weight: 600; color: #64748b; background: white; padding: 10px 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                {{ now()->format('F d, Y') }} 
             </div>
         </div>
 
         <div class="lf-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="margin:0; font-size:18px; color: #1e293b;">Registered Donors</h2>
-                <span style="font-size:11px; background:#f0f9ff; color:#0369a1; padding:5px 12px; border-radius:20px; font-weight: 600;">
+                <h2 style="margin:0; font-family: 'DM Sans', sans-serif; font-size:18px; color: #1e293b; font-weight: 700;">Registered Donors</h2>
+                <span style="font-family: 'DM Sans', sans-serif; font-size:11px; background:#f0f9ff; color:#0369a1; padding:5px 12px; border-radius:20px; font-weight: 600;">
                     TOTAL: {{ count($donors) }}
                 </span>
             </div>
@@ -94,16 +97,16 @@
                     <tbody>
                         @forelse($donors as $donor)
                             <tr>
-                                <td style="font-weight:600; color: #1e293b;">{{ $donor->name }}</td>
+                                <td style="font-family: 'DM Sans', sans-serif; font-weight:600; color: #1e293b;">{{ $donor->name }}</td>
                                 <td><span class="blood-badge">{{ $donor->blood_type ?? 'N/A' }}</span></td>
-                                <td style="color: #64748b;">{{ $donor->email }}</td>
-                                <td style="font-size: 12px; color: #64748b;">
+                                <td style="font-family: 'DM Sans', sans-serif; color: #64748b;">{{ $donor->email }}</td>
+                                <td style="font-family: 'DM Sans', sans-serif; font-size: 12px; color: #64748b;">
                                     {{ $donor->created_at->format('M d, Y') }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" style="text-align:center; padding:50px; color: #94a3b8;">
+                                <td colspan="4" style="text-align:center; padding:50px; color: #94a3b8; font-family: 'DM Sans', sans-serif;">
                                     <div style="font-size: 24px; margin-bottom: 10px;">📭</div>
                                     No registered donors found in the database.
                                 </td>

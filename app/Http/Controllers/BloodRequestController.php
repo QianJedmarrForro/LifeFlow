@@ -7,6 +7,7 @@ use App\Models\BloodRequest;
 use App\Models\Donation;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\RequestStatusNotification;
 
 class BloodRequestController extends Controller
 {
@@ -70,7 +71,7 @@ class BloodRequestController extends Controller
     }
 
     /**
-     * Handle the form submission
+     * Handle the form submission (User Action)
      */
     public function store(Request $request)
     {
@@ -87,7 +88,13 @@ class BloodRequestController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['status'] = 'pending';
 
-        BloodRequest::create($validated);
+        $bloodRequest = BloodRequest::create($validated);
+
+        // Notify all admins about the incoming request
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new RequestStatusNotification($bloodRequest, 'new'));
+        }
 
         return redirect()
             ->route('dashboard')
@@ -114,10 +121,16 @@ class BloodRequestController extends Controller
         $availableCompatibleUnits = $totalIn - $totalOut;
 
         if ($availableCompatibleUnits < $bloodRequest->units) {
-            return back()->with('error', "Insufficient stock! Total compatible volume for {$recipientType} is only {$availableCompatibleUnits}ml.");
+            return back()->with('error', "Insufficient stock! Total compatible volume for {$recipientType} is only {$availableCompatibleUnits} units.");
         }
 
         $bloodRequest->update(['status' => 'approved']);
+
+        // Notify the requester user of approval
+        $user = $bloodRequest->user;
+        if ($user) {
+            $user->notify(new RequestStatusNotification($bloodRequest, 'approved'));
+        }
 
         return back()->with('success', "Request approved using compatible stock logic.");
     }
@@ -129,7 +142,26 @@ class BloodRequestController extends Controller
     {
         $bloodRequest = BloodRequest::findOrFail($id);
         $bloodRequest->update(['status' => 'rejected']);
-        
+
+        // Notify the requester user of rejection
+        $user = $bloodRequest->user;
+        if ($user) {
+            $user->notify(new RequestStatusNotification($bloodRequest, 'rejected'));
+        }
+
         return back()->with('success', 'Request has been rejected.');
+    }
+
+    /**
+     * Mark unread blood requests updates as read for the authenticated user
+     */
+    public function markNotificationsAsRead()
+    {
+        auth()->user()->bloodRequests()
+            ->whereIn('status', ['approved', 'rejected'])
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
     }
 }
